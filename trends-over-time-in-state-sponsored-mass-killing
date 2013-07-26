@@ -1,0 +1,224 @@
+# Code to make charts in "Trends Over Time in State-Sponsored Mass Killing" (25 July 2013) 
+# http://dartthrowingchimp.wordpress.com/2013/07/25/trends-over-time-in-state-sponsored-mass-killing/
+
+# DATA
+
+# Clear workspace.
+rm(list=ls(all=TRUE))
+
+# Get .csv from this link to my Google Drive
+# https://docs.google.com/file/d/0B5wyt4eDq98GQkJPcGx6cFNpd3M/edit?usp=sharing
+
+# Load it.
+df <- read.csv("masskillings.csv", header = TRUE)
+
+
+# TIME-SERIES PLOTS
+
+# Create annual summaries
+onsets <- tapply(ifelse(df$mkl.start==1, 1, 0), df$year, sum, na.rm = TRUE)
+ongoings <- tapply(ifelse(df$mkl.ongoing==1, 1, 0), df$year, sum, na.rm = TRUE)
+years <- seq(from=1945, to=2013, by=1)
+countries <- tapply(ifelse(is.na(df$age)== FALSE, 1, 0), df$year, sum, na.rm = TRUE)
+datyr <- as.data.frame(cbind(years, countries, onsets, ongoings))
+datyr$incidence <- 100 * (datyr$onsets / datyr$countries)
+datyr$prevalence <- 100 * (datyr$ongoings / datyr$countries)
+
+datyr <- datyr[which(datyr$year < 2013),] # Remove current (incomplete) year
+
+png(file="C:/mass.killing.trends.1946.2012.png",
+     width=6, height=8, units="in", bg="white", res=150)
+par(mfrow=c(3,1))
+plot(datyr$years, datyr$onsets, type="h", col="orange", lwd=2,
+     ylim=c(0,10), xlab="", ylab="no. of events", main = "Counts of Onsets")
+plot(datyr$years, datyr$incidence, type="l", col="red", lwd=2,
+     ylim=c(0,10), xlab="", ylab="% of countries", main = "Incidence")
+plot(datyr$years, datyr$prevalence, type="l", col="brown", lwd=2,
+     ylim=c(0,25), xlab="", ylab="% of countries", main = "Prevalence")
+dev.off()
+
+
+# MAPS AND ANIMATION
+
+# Load packages
+library(rworldmap)
+library(animation)
+
+# Rename some countries to match the names used in 'rworldmap'
+df$country <- as.character(df$country)
+df$country <- replace(df$country, df$country=="Ivory Coast", "Cote d'Ivoire")
+df$country <- replace(df$country, df$country=="Congo-Brazzaville", "Congo")
+df$country <- replace(df$country, df$country=="Congo-Kinshasa", "Democratic Republic of the Congo")
+df$country <- replace(df$country, df$country=="Congo-Brazzaville", "Congo")
+df$country <- replace(df$country, df$country=="Iran", "Iran (Islamic Republic of)")
+df$country <- replace(df$country, df$country=="Libya", "Libyan Arab Jamahiriya")
+df$country <- replace(df$country, df$country=="Macedonia", "The former Yugoslav Republic of Macedonia")
+df$country <- replace(df$country, df$country=="Laos", "Lao People's Democratic Republic")
+df$country <- replace(df$country, df$country=="Moldova", "Republic of Moldova")
+df$country <- replace(df$country, df$country=="Vietnam", "Viet Nam")
+df$country <- replace(df$country, df$country=="Syria", "Syrian Arab Republic")
+df$country <- replace(df$country, df$country=="Tanzania", "United Republic of Tanzania")
+df$country <- replace(df$country, df$country=="North Korea", "Korea, Democratic People's Republic of")
+df$country <- replace(df$country, df$country=="South Korea", "Korea, Republic of")
+df$country <- replace(df$country, df$country=="Timor Leste", "Timor-Leste")
+df$country <- replace(df$country, df$country=="Myanmar", "Burma")
+
+# Fix year to be numeric
+df$year <- as.numeric(df$year)
+
+# Paint former Soviet republics with values for "Soviet Union" pre-1991
+sovs <- c("Russia", "Estonia", "Latvia", "Lithuania", "Belarus", "Republic of Moldova", "Georgia", "Armenia", "Azerbaijan",
+          "Tajikistan", "Turkmenistan", "Kazakhstan", "Uzbekistan", "Kyrgyzstan", "Ukraine")
+ssrs <- rep( sovs, each=length( seq(1946, 2011, 1) ) )
+yrs <- rep( seq(1946, 2011, 1), times=length(sovs) )
+sovdat <- as.data.frame(cbind(ssrs, yrs))
+names(sovdat) <- c('country', 'year')
+df <- merge(df, sovdat, all=T)
+ussr <- which(df$year<1991 & (df$country=="Russia" | df$country=="Estonia" | df$country=="Latvia" |
+              df$country=="Lithuania" | df$country=="Belarus" | df$country=="Republic of Moldova" |
+              df$country=="Georgia" | df$country=="Armenia" | df$country=="Azerbaijan" |
+              df$country=="Tajikistan" | df$country=="Turkmenistan" | df$country=="Kazakhstan" |
+              df$country=="Uzbekistan" | df$country=="Kyrgyzstan" | df$country=="Ukraine") )
+df$ongoing <- replace(df$ongoing, ussr, 0)
+
+# Same for Czechoslovakia
+czechoslovakia <- c("Czech Republic", "Slovakia")
+czhs <- rep( czechoslovakia, each=length( seq(1946, 2011, 1) ) )
+yrs <- rep( seq(1946, 2011, 1), times=length(czechoslovakia) )
+czhdat <- as.data.frame(cbind(czhs, yrs))
+names(czhdat) <- c('country', 'year')
+df <- merge(df, czhdat, all=T)
+czechgo1 <- which( ( df$year==1946 | (df$year>1947 & df$year<1964) ) & (df$country=="Czech Republic" | df$country=="Slovakia") )
+czechgo0 <- which( ( df$year==1947 | (df$year>=1964 & df$year<1993) ) & (df$country=="Czech Republic" | df$country=="Slovakia") )
+czechst1 <- which(df$year==1948 & (df$country=="Czech Republic" | df$country=="Slovakia") )
+czechst0 <- which((df$year<1948 | (df$year>1948 & df$year<1993) ) & (df$country=="Czech Republic" | df$country=="Slovakia") )
+df$ongoing <- replace(df$ongoing, czechgo1, 1 )
+df$ongoing <- replace(df$ongoing, czechgo0, 0 )
+df$start <- replace(df$start, czechst1, 1 )
+df$start <- replace(df$start, czechst0, 0 )
+
+# Ditto for Yugoslavia
+yugoslavia <- c("Bosnia and Herzegovina", "The former Yugoslav Republic of Macedonia", "Serbia", "Montenegro", "Croatia", "Slovenia")
+yugs <- rep( yugoslavia, each=length( seq(1946, 2011, 1) ) )
+yrs <- rep( seq(1946, 2011, 1), times=length(yugoslavia) )
+yugdat <- as.data.frame(cbind(yugs, yrs))
+names(yugdat) <- c('country', 'year')
+df <- merge(df, yugdat, all=T)
+yuggo1 <- which( df$year<=1956 &
+                    (df$country=="Bosnia and Herzegovina" | df$country=="The former Yugoslav Republic of Macedonia" |
+                     df$country=="Serbia" | df$country=="Montenegro" | df$country=="Croatia" | df$country=="Slovenia")
+                )
+yuggo0 <- which( df$year>1956 & df$year<1991 &
+                    (df$country=="Bosnia and Herzegovina" | df$country=="The former Yugoslav Republic of Macedonia" |
+                     df$country=="Serbia" | df$country=="Montenegro" | df$country=="Croatia" | df$country=="Slovenia")
+                )
+yugst0 <- which(df$year<1991 &
+                    (df$country=="Bosnia and Herzegovina" | df$country=="The former Yugoslav Republic of Macedonia" |
+                     df$country=="Serbia" | df$country=="Montenegro" | df$country=="Croatia" | df$country=="Slovenia")
+                )
+df$ongoing <- replace(df$ongoing, yuggo1, 1 )
+df$ongoing <- replace(df$ongoing, yuggo0, 0 )
+df$start <- replace(df$start, yugst0, 0 )
+fyuggo1 <- which( df$year>=1998 & df$year<=1999 &
+                     (df$country=="Serbia" | df$country=="Montenegro") )
+fyuggo0 <- which( ( (df$year>=1991 & df$year<=1997) | (df$year>=2000 & df$year<=2005) ) &
+                     (df$country=="Serbia" | df$country=="Montenegro") )
+fyugst1 <- which( df$year==1998 &
+                     (df$country=="Serbia" | df$country=="Montenegro") )
+fyugst0 <- which( ( (df$year>=1991 & df$year<=1997) | (df$year>=1999 & df$year<=2005) ) &
+                     (df$country=="Serbia" | df$country=="Montenegro") )
+df$ongoing <- replace(df$ongoing, fyuggo1, 1 )
+df$ongoing <- replace(df$ongoing, fyuggo0, 0 )
+df$start <- replace(df$start, fyugst1, 1 )
+df$start <- replace(df$start, fyugst0, 0 )
+
+# Ethiopia and Eritrea
+eritrea <- "Eritrea"
+eri <- rep( eritrea, each=length( seq(1946, 2011, 1) ) )
+yrs <- rep( seq(1946, 2011, 1), times=length(eritrea) )
+eridat <- as.data.frame(cbind(eri, yrs))
+names(eridat) <- c('country', 'year')
+df <- merge(df, eridat, all=T)
+erigo1 <- which( df$year>=1961 & df$year<=1991 & df$country=="Eritrea" )
+erigo0 <- which( ( df$year<=1960 | df$year==1992 ) & df$country=="Eritrea" )
+erist1 <- which( ( df$year==1961 | df$year==1974 | df$year==1977 )  & df$country=="Eritrea" )
+erist0 <- which( ( df$year<=1960 | (df$year>=1962 & df$year<=1973) | (df$year>=1975 & df$year<=1976) |
+                  (df$year>=1978 & df$year<=1992) | (df$year>=1999 & df$year<=2005) ) & df$country=="Eritrea" )
+df$ongoing <- replace(df$ongoing, erigo1, 1 )
+df$ongoing <- replace(df$ongoing, erigo0, 0 )
+df$start <- replace(df$start, erist1, 1 )
+df$start <- replace(df$start, erist0, 0 )
+
+# Vietnam
+vietnam <- "Viet Nam"
+viet <- rep( vietnam, times=length( seq(1946, 2011, 1) ) )
+yrs <- rep( seq(1946, 2011, 1), times=length(vietnam) )
+vietdat <- as.data.frame(cbind(viet, yrs))
+names(vietdat) <- c('country', 'year')
+df <- merge(df, vietdat, all=T)
+df$ongoing <- replace(df$ongoing, which(df$country=="Viet Nam" & df$year>=1954 & df$year<=1975), 1)
+df$ongoing <- replace(df$ongoing, which(df$country=="Viet Nam" & df$year<1954), 0)
+df$start <- replace(df$start, which(df$country=="Viet Nam" & df$year==1954), 1)
+df$start <- replace(df$start, which(df$country=="Viet Nam" & (df$year<1954 | df$year>1954)), 0)
+
+# Yemen
+yemen <- "Yemen"
+yem <- rep( yemen, times=length( seq(1946, 2011, 1) ) )
+yrs <- rep( seq(1946, 2011, 1), times=length(yemen) )
+yemdat <- as.data.frame(cbind(yem, yrs))
+names(yemdat) <- c('country', 'year')
+df <- merge(df, yemdat, all=T)
+df$ongoing <- replace(df$ongoing, which(df$country=="Yemen" & ( ( df$year>=1962 & df$year<=1970) | df$year==1986 ) ), 1)
+df$ongoing <- replace(df$ongoing, which(df$country=="Yemen" & 
+                                        ( df$year<1962 | (df$year>1970 & df$year<1986) | (df$year>1986 & df$year<1990) ) ), 0)
+df$start <- replace(df$start, which(df$country=="Yemen" & (df$year==1962 | df$year==1986)), 1)
+df$start <- replace(df$start, which(df$country=="Yemen" &
+                                   ( df$year<1962 | (df$year>1962 & df$year<1986) | (df$year>1986 & df$year<1990) ) ), 0)
+                                   
+# Germany
+germany <- "Germany"
+germ <- rep( germany, times=length( seq(1946, 2011, 1) ) )
+yrs <- rep( seq(1946, 2011, 1), times=length(germany) )
+germdat <- as.data.frame(cbind(germ, yrs))
+names(germdat) <- c('country', 'year')
+df <- merge(df, germdat, all=T)
+df$ongoing <- replace(df$ongoing, which(df$country=="Germany" & df$year<1990), 0)
+df$start <- replace(df$start, which(df$country=="Germany" & df$year<1990), 0)
+
+# Create 3-level cat var for none, onset, ongoing
+df$status <- ifelse(df$ongoing==0, 0, ifelse(df$start==1, 2, ifelse(is.na(df$start)==F, 1, NA)))
+df$status <- factor(df$status, levels=c(0,1,2), labels=c("none", "ongoing", "onset"))
+
+# Function to make a jpg for a one-year slice
+mapit <- function(x) {
+                      jpeg(file=paste("mk", as.character(x), ".jpg", sep=""), width=5, height=4, units='in', bg='white', res=150, quality=100)
+                      par(mai = c(0, 0, 0.2, 0), xaxs = "i", yaxs = "i")
+                      mapCountryData(joinCountryData2Map(subset(df, year==x), joinCode = "NAME", nameJoinColumn = "country"),
+                      nameColumnToPlot="status", numCats = 3, catMethod="categorical", colourPalette=c("gray95", "darkorange", "darkorange4"),
+                      mapTitle=paste(as.character(x)) )
+                      dev.off()
+                      }
+
+# Run the function for a selected range of years
+for( i in seq(1946,2012,1) ) { mapit(i) }
+
+# Make a GIF [N.B. This balks if I try to use shorthand for maplist]
+maplist <- c("mk1946.jpg", "mk1947.jpg", "mk1948.jpg", "mk1949.jpg", "mk1950.jpg", 
+             "mk1951.jpg", "mk1952.jpg", "mk1953.jpg", "mk1954.jpg", "mk1955.jpg",
+             "mk1956.jpg", "mk1957.jpg", "mk1958.jpg", "mk1959.jpg", "mk1960.jpg", 
+             "mk1961.jpg", "mk1962.jpg", "mk1963.jpg", "mk1964.jpg", "mk1965.jpg",
+             "mk1966.jpg", "mk1967.jpg", "mk1968.jpg", "mk1969.jpg", "mk1970.jpg",
+             "mk1971.jpg", "mk1972.jpg", "mk1973.jpg", "mk1974.jpg", "mk1975.jpg",
+             "mk1976.jpg", "mk1977.jpg", "mk1978.jpg", "mk1979.jpg", "mk1980.jpg",
+             "mk1981.jpg", "mk1982.jpg", "mk1983.jpg", "mk1984.jpg", "mk1985.jpg",
+             "mk1986.jpg", "mk1987.jpg", "mk1988.jpg", "mk1989.jpg", "mk1990.jpg",
+             "mk1991.jpg", "mk1992.jpg", "mk1993.jpg", "mk1994.jpg", "mk1995.jpg",
+             "mk1996.jpg", "mk1997.jpg", "mk1998.jpg", "mk1999.jpg", "mk2000.jpg",
+             "mk2001.jpg", "mk2002.jpg", "mk2003.jpg", "mk2004.jpg", "mk2005.jpg",
+             "mk2006.jpg", "mk2007.jpg", "mk2008.jpg", "mk2009.jpg", "mk2010.jpg",
+             "mk2011.jpg", "mk2012.jpg")
+ani.options( convert = shQuote("C:/Program Files (x86)/ImageMagick-6.7.6-q16/convert.exe") )
+ani.options( outdir = getwd() )
+im.convert(maplist, output = "mk-animation1.gif")
+
+                      
