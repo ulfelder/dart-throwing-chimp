@@ -10,6 +10,9 @@
 # rgjepdt  Cumulative count of episodes of democracy since country birth or independence
 # wdigdpag  Annual GDP growth rate per World Bank's WDI
 
+# Load data
+dat <- read.csv("econ.growth.dem.survival.csv", header = TRUE)
+
 # Create marker for T years
 dat$tdem <- ifelse(dat$rgjtdem==1, 1, 0)
 
