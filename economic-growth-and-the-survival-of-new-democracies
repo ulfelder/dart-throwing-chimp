@@ -1,0 +1,145 @@
+# Code for "Economic Growth and the Survival of New Democracies" (6 February 2012)
+# http://dartthrowingchimp.wordpress.com/2012/02/06/economic-growth-and-the-survival-of-new-democracies/
+
+# Variables used:
+# rgjtdem  Any transition from autocracy to democracy (binary)
+# rgjtaut  Any transition from democracy to autocracy (binary)
+# polpacmp  Polity competitiveness of political participation
+# xxxcimr  Infant mortality rate relative to annual global median
+# madgdppc  GDP per capita per Maddison
+# rgjepdt  Cumulative count of episodes of democracy since country birth or independence
+# wdigdpag  Annual GDP growth rate per World Bank's WDI
+
+# Create marker for T years
+dat$tdem <- ifelse(dat$rgjtdem==1, 1, 0)
+
+# Prepare for lagging & leading
+library(plm)
+dat.tscs <- pdata.frame(dat, c('sftgcode', 'year'))
+
+# Create indicator for 5-year survival
+dat.tscs$tdem5 <- lag(dat.tscs$tdem, 5)
+
+dat.tscs$taut1 <- lag(dat.tscs$rgjtaut, 1)
+dat.tscs$taut2 <- lag(dat.tscs$rgjtaut, 2)
+dat.tscs$taut3 <- lag(dat.tscs$rgjtaut, 3)
+dat.tscs$taut4 <- lag(dat.tscs$rgjtaut, 4)
+dat.tscs$taut5 <- lag(dat.tscs$rgjtaut, 5)
+
+dat.tscs$surv5 <- ifelse(dat.tscs$taut5==0 & dat.tscs$taut4==0 & dat.tscs$taut3==0 &
+                                     dat.tscs$taut2==0 & dat.tscs$taut1==0 & dat.tscs$rgjtaut==0, 1, 0)
+table(dat.tscs$surv5[dat.tscs$tdem5==1])
+
+# Create factionalism indicator
+dat.tscs$faction <- ifelse(dat.tscs$polpacmp==3, 1, 0)
+dat.tscs$fact5 <- lag(dat.tscs$faction, 5)
+dat.tscs$fact4 <- lag(dat.tscs$faction, 4)
+dat.tscs$factl <- ifelse(dat.tscs$fact5==1 | dat.tscs$fact4==1, 1, 0)
+
+# Create lags for matching criteria
+dat.tscs$im5 <- lag(dat.tscs$xxxcimr, 5)
+dat.tscs$gdp5 <- lag(dat.tscs$madgdppc, 5)
+dat.tscs$epdt5 <- lag(dat.tscs$rgjepdt, 5)
+dat.tscs$firstdem <- ifelse(dat.tscs$epdt5>1, 0, 1)
+
+# Create lagged growth measures
+dat.tscs$grow6 <- lag(dat.tscs$wdigdpag, 6)
+dat.tscs$grow5 <- lag(dat.tscs$wdigdpag, 5)
+dat.tscs$grow4 <- lag(dat.tscs$wdigdpag, 4)
+
+dat.tscs$gdp5 <- lag(dat.tscs$wdigdpag, 5)
+dat.tscs$gdp3 <- lag(dat.tscs$wdigdpag, 3)
+dat.tscs$gdpcagr <- 100 * ( (dat.tscs$gdp3/dat.tscs$gdp5)^(1/2) - 1 )
+
+# Read back out 
+lagdat <- as.data.frame(dat.tscs)
+
+# Subset to transitions
+sample <- subset(lagdat, lagdat$tdem5==1)
+
+# Create post-CW indicator
+sample$pcw <- ifelse(as.numeric(as.character(sample$year))>=1994, 1, 0)
+
+# Model
+model.wdi <- glm(surv5 ~ grow6 + grow5 + grow4 + log(im5) + fact5 + firstdem + pcw, family = binomial, data = sample)
+summary(model.wdi)
+
+# Plotting marginal effects
+b <- model.wdi$coefficients
+x <- seq(-10,10,1)
+z <- b[1] + b[2] * mean(sample$grow6, na.rm=T) + b[3] * x + b[4] * mean(sample$grow4, na.rm=T) +
+     b[5] * log(mean(sample$im5, na.rm=T)) + b[6] + b[7] + b[8]
+p <- exp(z)/(1 + exp(z))
+
+jpeg(file='dem_survival_by_growth.jpg',
+     width=14, height=14, units='cm', bg='white', res=150, quality=100)
+plot(x, p, type='l',
+     lwd=2, col='darkorange2',
+     ylim=c(0,1),
+     xlab='Annual GDP growth rate in transition year', ylab='probability of survival for 5+ yrs',
+     main='Initial GDP Growth and the Survival of Democracy',
+     cex=0.75)
+dev.off()
+
+# Plotting in-sample accuracy
+sample$z <- b[1] +
+            b[2] * sample$grow6 +
+            b[3] * sample$grow5 + 
+            b[4] * sample$grow4 +
+            b[5] * log(sample$xxxcimr) +
+            b[6] * sample$fact5 +
+            b[7] * sample$firstdem +
+            b[8] * sample$pcw
+sample$p <- exp(sample$z) / (1 + exp(sample$z))
+
+library(ROCR)
+pred <- prediction(sample$p, sample$surv5)
+roc <- performance(pred, 'tpr', 'fpr')
+auc <- performance(pred, 'auc')
+jpeg(file='growth_dem_surv_roc.jpg',
+     width=12, height=12, units='cm', bg='white', res=150, quality=100)
+plot(roc, main='In-Sample Accuracy', cex=0.75, col='red', lwd=2 )
+text(x=1,y=0.05,
+     labels = paste('AUC', substring(as.character(auc@y.values),1,5), sep=' = '),
+     pos=2, cex=0.75, col = 'red')
+dev.off()
+
+# Comparing in-sample accuracy with & without growth rates
+model2 <- glm(surv5 ~ log(im5) + fact5 + firstdem + pcw, family = binomial, data = sample)
+b2 <- model2$coefficients
+sample$z2 <- b2[1] +
+             b2[2] * log(sample$xxxcimr) +
+             b2[3] * sample$fact5 +
+             b2[4] * sample$firstdem +
+             b2[5] * sample$pcw
+sample$p2 <- exp(sample$z2) / (1 + exp(sample$z2))
+pred2 <- prediction(sample$p2, sample$surv5)
+roc2 <- performance(pred2, 'tpr', 'fpr')
+auc2 <- performance(pred2, 'auc')
+
+jpeg(file='growth_dem_surv_roc_compare.jpg',
+     width=12, height=12, units='cm', bg='white', res=150, quality=100)
+plot(roc, main='Contribution of GDP Growth to Accuracy', cex=0.75, col='red', lwd=2, add=F )
+plot(roc2, col='blue', lwd=2 , add=T)
+text(x=1,y=0.15,
+     labels = paste('AUC with GDP growth', substring(as.character(auc@y.values),1,5), sep=' = '),
+     pos=2, cex=0.8, col = 'red')
+text(x=1,y=0.05,
+     labels = paste('AUC without GDP growth', substring(as.character(auc2@y.values),1,5), sep=' = '),
+     pos=2, cex=0.8, col = 'blue')
+dev.off()
+
+# Estimates for specific cases
+z.tun <- b[1] + b[2] * 3.1 + b[3] * 0 + b[4] * 3.9 +
+         b[5] * log(bigdat$xxxcimr[bigdat$sftgcode=='TUN' & bigdat$year==2008]) + b[6] * 0 + b[7] + b[8]
+z.egy <- b[1] + b[2] * 1.2 + b[3] * 1.8 + b[4] * 6.5 +
+         b[5] * log(bigdat$xxxcimr[bigdat$sftgcode=='EGY' & bigdat$year==2008]) + b[6] * 1 + b[7] + b[8]
+z.lib <- b[1] + b[2] * -60.0 + b[3] * 69.7 + b[4] * 20.5 +
+         b[5] * log(bigdat$xxxcimr[bigdat$sftgcode=='LIB' & bigdat$year==2008]) + b[6] * 1 + b[7] + b[8]
+
+p.tun <- exp(z.tun)/(1 + exp(z.tun))
+p.egy <- exp(z.egy)/(1 + exp(z.egy))
+p.lib <- exp(z.lib)/(1 + exp(z.lib))
+
+factmod <- glm(fact5 ~ log(im5) + firstdem + grow6 + grow5, family = binomial, data = sample)
+summary(factmod)
