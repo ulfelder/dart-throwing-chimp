@@ -202,77 +202,6 @@ mapit <- function(x) {
 # Run the function for a selected range of years
 for( i in seq(1946,2012,1) ) { mapit(i) }
 
-# Create an ordered list of maps for animation
-# NOTE: For reasons unknown, this balks if I try to use shorthand, so I've
-# resorted to writing out the full list).
-maplist <- c("mk1946.jpg",
-             "mk1947.jpg",
-             "mk1948.jpg",
-             "mk1949.jpg",
-             "mk1950.jpg", 
-             "mk1951.jpg", 
-             "mk1952.jpg",
-             "mk1953.jpg",
-             "mk1954.jpg",
-             "mk1955.jpg",
-             "mk1956.jpg",
-             "mk1957.jpg",
-             "mk1958.jpg",
-             "mk1959.jpg",
-             "mk1960.jpg",
-             "mk1961.jpg",
-             "mk1962.jpg",
-             "mk1963.jpg",
-             "mk1964.jpg",
-             "mk1965.jpg",
-             "mk1966.jpg",
-             "mk1967.jpg",
-             "mk1968.jpg",
-             "mk1969.jpg",
-             "mk1970.jpg",
-             "mk1971.jpg",
-             "mk1972.jpg",
-             "mk1973.jpg",
-             "mk1974.jpg",
-             "mk1975.jpg",
-             "mk1976.jpg",
-             "mk1977.jpg",
-             "mk1978.jpg",
-             "mk1979.jpg",
-             "mk1980.jpg",
-             "mk1981.jpg",
-             "mk1982.jpg",
-             "mk1983.jpg",
-             "mk1984.jpg",
-             "mk1985.jpg",
-             "mk1986.jpg",
-             "mk1987.jpg",
-             "mk1988.jpg",
-             "mk1989.jpg",
-             "mk1990.jpg",
-             "mk1991.jpg",
-             "mk1992.jpg",
-             "mk1993.jpg",
-             "mk1994.jpg",
-             "mk1995.jpg",
-             "mk1996.jpg",
-             "mk1997.jpg",
-             "mk1998.jpg",
-             "mk1999.jpg",
-             "mk2000.jpg",
-             "mk2001.jpg",
-             "mk2002.jpg",
-             "mk2003.jpg",
-             "mk2004.jpg",
-             "mk2005.jpg",
-             "mk2006.jpg",
-             "mk2007.jpg",
-             "mk2008.jpg",
-             "mk2009.jpg",
-             "mk2010.jpg",
-             "mk2011.jpg",
-             "mk2012.jpg")
-
 # Make a .gif.
 # NOTE: The code that follows is specific to Windows and requires prior installation of
 # ImageMagick (http://www.imagemagick.org/script/index.php). If you install ImageMagick,
@@ -281,5 +210,6 @@ maplist <- c("mk1946.jpg",
 library(animation)
 ani.options( convert = shQuote("C:/Program Files (x86)/ImageMagick-6.7.6-q16/convert.exe") )
 ani.options( outdir = getwd() )
-ani.options( nmax = 75)
-saveGIF(maplist, movie.name = "mkeps19462012.gif")
+ani.options( nmax = 2012 - 1945)
+ani.options( ani.type = "jpeg", ani.dev = "jpeg")
+im.convert("mk*.jpg", output = "mkeps19462012.gif")
