@@ -62,6 +62,34 @@ logit.f <- formula(cou.a.d.1 ~ colbrit + colfrnc + colespn + postcw + ageln + xx
   cou.tries5d + world.ln + region.ln + slowgrowth + polcat2 + polcat3 + polcat7 + durableln + elcelethc + nld.any.1 +
   civconc )
 
+# Variable IDs
+# cou.a.d.1    Any coup attempts (successful or failed) during next calendar year (0/1)
+# reg.afr      Sub-Saharan African country (0/1)
+# reg.eur      Eurasian country (0/1)
+# reg.amr      American or Caribbean country (0/1)
+# reg.eap      East Asia or Pacific country (0/1)
+# reg.mna      Middle Eastern or North African country (0/1)
+# reg.sca      South or Central Asian country (0/1)
+# colbrit      Former British colony (0/1)
+# colfrnc      Former French colony (0/1)
+# colespn      Former Spanish colony (0/1)
+# postcw       Post-Cold War period, 1991 or later (0/1)
+# ageln        Country age, logged
+# xxxcimrln    Infant mortality rate relative to annual global median, logged
+# cou.tries5d  Any coup attempts in previous 5 years (0/1)
+# world.ln     Count of other countries worldwide with any coup attempts during year, logged
+# region.ln    Count of other countries in same region with any coup attempts during year, logged
+# slowgrowth   Annual growth in GDP per capita less than 2 percent (0/1)
+# polcat1      Political regime type: dictatorship (Polity -10 to -6)
+# polcat2      Political regime type: anocracy (Polity -5 to 5)
+# polcat3      Political regime type: democracy (Polity 6 to 10)
+# polcat7      Political regime type: transition, interruption, or interregnum (polity -66, -77, or -88)
+# durableln    Years since last major change in Polity score, logged
+# elcelethc    Elite ethnicity is politically salient (0/1)
+# nld.any.1    Any national executive, legislative, or constituent assembly elections during next year (0/1)
+# civconc      Any violent civil conflict (0/1)
+
+
 require(caret)
 valdat <- subset(mash, year >= 1960 & year <= 2012 & is.na(cou.a.d.1) == FALSE)
 y <- valdat$cou.a.d.1
