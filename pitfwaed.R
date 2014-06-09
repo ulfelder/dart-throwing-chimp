@@ -69,7 +69,7 @@ waed.mo <- waed.mo[order(waed.mo$Country, waed.mo$year, waed.mo$month),]
 
 # Merge into full country-month rectangle and fill in NAs with 0s
 year <- rep(seq(1995, 2014), each = 12)
-month <- rep(c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"), times = length(yr))
+month <- rep(c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"), times = length(year))
 yearmonth <- paste(year, month, sep = '-')
 countries <- unique(waed$Country)
 countries <- countries[is.na(countries)==FALSE] # Get rid of NA, which trips up next step if it's in
