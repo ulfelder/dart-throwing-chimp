@@ -34,7 +34,6 @@ refugees$total.pct <- 100 * (refugees$total / refugees$pop)
 
 # Then we plot the data.
 
-setwd("c:/users/jay/documents/blog posts/")
 png(file = "global.refugees.png", width=12, height=6, units='cm', bg='white', res = 150)
 par(mar=c(2,2,3,1))
 par(cex.axis = 0.5)
