@@ -55,7 +55,7 @@ mod0 <- lm(score.raw ~ Wiki.Diff, data = gd)
 
 # Ingest .csv with 2014-2015 matchups copied and pasted from http://www.pro-football-reference.com/years/2014/
 # with manual removal of most headers and correction of top header row
-nfl2014all <- read.csv("c:/users/jay/documents/blog posts/nfl2014schedule.csv", header = TRUE)
+nfl2014all <- read.csv("nfl2014schedule.csv", header = TRUE)
 nfl2014all$At <- nfl2014all$Time <- nfl2014all$Tickets <- NULL # Remove useless columns
 nfl2014all$Visitor <- as.character(nfl2014all$Visitor)
 nfl2014all$Home.Team <- as.character(nfl2014all$Home.Team)
@@ -98,7 +98,7 @@ y.tilde <- array(NA, c(n.sims, n.tilde))  # Create matrix for sim predictions
 for (s in 1:n.sims) { y.tilde[s,] <- rnorm(n.tilde, X.tilde %*% sim.2014@coef[s,], sim.2014@sigma[s]) }
 
 # Get probability of home win by counting sims with pred score > 0 & dividing by n of sims
-p.home <- colSums(y.tilde > 0)/1000
+p.home <- colSums(y.tilde > 0)/n.sims
 
 # Transpose matrix of scores from sims
 sim.2014.scores <- as.data.frame( t(y.tilde) )
@@ -109,11 +109,8 @@ names(sim.2014.scores) <- simnames
 nfl.2014.sim <- as.data.frame(cbind(nfl2014all, p.home, sim.2014.scores))
 nfl.2014.sim <- nfl.2014.sim[order(nfl.2014.sim$Week, nfl.2014.sim$Day),]
 
-# Add means and 90% CI bounds for net scores
+# Add means for net scores
 nfl.2014.sim$mean <- round(rowSums(subset(nfl.2014.sim, select = c(simnames))/ n.sims), 1)
-nfl.2014.sim$sd <- 
-nfl.2014.sim$ci.90.hi <- 
-nfl.2014.sim$ci.90.lo <- 
 
 # Write that out for posterity
 write.csv(nfl.2014.sim, file = "nfl.2014.sims.20140904.csv", row.names = FALSE)
