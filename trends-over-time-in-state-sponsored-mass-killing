@@ -25,7 +25,7 @@ datyr$prevalence <- 100 * (datyr$ongoings / datyr$countries)
 
 datyr <- datyr[which(datyr$year < 2013),] # Remove current (incomplete) year
 
-jpg(file="mass.killing.trends.1946.2012.jpg",
+jpeg(file="mass.killing.trends.1946.2012.jpg",
      width=6, height=8, units="in", bg="white", res=150)
 par(mfrow=c(3,1))
 plot(datyr$years, datyr$onsets, type="h", col="orange", lwd=2,
