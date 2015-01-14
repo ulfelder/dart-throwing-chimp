@@ -1,4 +1,4 @@
-# This script assumes that the working directory contains the file called in line 13. It can be
+# This script assumes that the working directory contains the file called in line 12. It can be
 # downloaded from https://drive.google.com/file/d/0B5wyt4eDq98GcGVpeS0zR1lmTmc/view?usp=sharing
 
 # Housekeeping
@@ -7,7 +7,6 @@ rm(list=ls(all=TRUE))
 # Load required packages
 library(rworldmap)
 library(Hmisc)
-library(gplots)
 
 # Load the data
 wiki2015 <- read.csv("wikisurvey_5678_ideas_2015-01-14T15-58-25Z.csv", stringsAsFactors = FALSE)
