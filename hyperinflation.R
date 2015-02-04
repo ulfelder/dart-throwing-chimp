@@ -1,6 +1,5 @@
-# HYPERINFLATION AND POLITICAL INSTABILITY
-# Jay Ulfelder
-# 2013-11-16
+# This goes with "Can Venezuela's Maduro Survive Hyperinflation?" (February 16, 2013)
+# https://dartthrowingchimp.wordpress.com/2013/11/17/can-venezuelas-maduro-survive-hyperinflation/
 
 # Clear workspace and load data
 # Original source: http://www.cato.org/publications/working-paper/world-hyperinflations
