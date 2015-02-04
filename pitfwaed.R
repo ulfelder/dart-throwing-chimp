@@ -1,16 +1,14 @@
-# PITF WORLDWIDE ATROCITIES DATASET INGESTION, CROSS-TABULATION, AND PLOTTING
-# 2014-06-10
-# Jay Ulfelder
+# This goes with "A Useful Data Set on Political Violence that Almost No One Is Using"
+# https://dartthrowingchimp.wordpress.com/2014/06/10/a-useful-data-set-on-political-violence-that-almost-no-one-is-using/
 
-rm(list=ls(all=TRUE))
-
-# NOTE: This script is referenced in the following blog post:
-# http://wp.me/p1domH-1tP
 # It assumes:
 #   a) That you have already extracted the spreadsheets from the downloaded .zip files; and
 #   b) That you have set the working directory to the folder where those extracted files sit.
 # Source files available at: http://eventdata.parusanalytics.com/data.dir/atrocities.html
-# This script worked for files posted on 2014-06-05.
+# This script worked for files posted there on 2014-06-05.
+
+# Clear workspace.
+rm(list=ls(all=TRUE))
 
 # These will need to be updated or expanded as future updates are posted.
 old <- "pitf.world.19950101-20121231.xls"
