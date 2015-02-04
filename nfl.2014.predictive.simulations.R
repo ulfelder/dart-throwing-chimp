@@ -1,3 +1,6 @@
+# This goes with "Turning Crowdsourced Preseason NFL Strength Ratings into Game-Level Forecasts" (August 11, 2014)
+# https://dartthrowingchimp.wordpress.com/2014/08/11/turning-crowdsourced-preseason-nfl-strength-ratings-into-game-level-forecasts/
+
 # NOTE: If you don't want to regenerate the simulations and just want to download and play with the ones I've
 # already produced, jump to line 121 and pick up from there.
 
