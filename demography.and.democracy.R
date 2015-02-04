@@ -1,3 +1,6 @@
+# This goes with "Demography and Democracy Revisited" (February 3, 2015)
+# https://dartthrowingchimp.wordpress.com/2015/02/03/demography-and-democracy-revisited/
+
 # Load required packages
 library(plyr)
 library(caret)
