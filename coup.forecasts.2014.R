@@ -1,6 +1,5 @@
-# COUP FORECASTS FOR 2014
-# Jay Ulfelder
-# 2014-01-25
+# This script goes with "Coup Forecasts for 2014":
+# https://dartthrowingchimp.wordpress.com/2014/01/25/coup-forecasts-for-2014/
 
 # The data set produced in the first section of this script can be downloaded in .csv format from Google Drive:
 # https://drive.google.com/file/d/0B5wyt4eDq98GWUdQRW1BcThqdk0/edit?usp=sharing
