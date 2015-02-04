@@ -1,3 +1,6 @@
+# This script goes with "Relative Risks of State-Led Mass Killing Onset in 2014: Results from a Wiki Survey" (January 1, 2014)
+# https://dartthrowingchimp.wordpress.com/2014/01/01/relative-risks-of-state-led-mass-killing-onset-in-2014-results-from-a-wiki-survey/
+
 # Data are on Google Drive at:
 # https://drive.google.com/file/d/0B5wyt4eDq98GeWVGWWNtWnc0Yzg/edit?usp=sharing
 
