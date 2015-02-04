@@ -1,3 +1,9 @@
+# This script covers two posts:
+# 1. "No, Democracy Has Not Been Discarded" (January 29, 2015)
+# https://dartthrowingchimp.wordpress.com/2015/01/29/no-democracy-has-not-been-discarded/
+# 2. "A Postscript on Measuring Change Over Time in Freedom in the World" (January 30, 2015)
+# https://dartthrowingchimp.wordpress.com/2015/01/30/a-postscript-on-measuring-change-over-time-in-freedom-in-the-world/
+
 # Load required packages
 library(animation)
 library(DataCombine)
