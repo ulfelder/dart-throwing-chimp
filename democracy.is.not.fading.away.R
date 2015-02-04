@@ -1,12 +1,8 @@
-# DEMOCRACY TRENDS
-# Jay Ulfelder
-# September 21, 2012
+# This goes with "Democracy Is Not Fading Away" (September 21, 2012)
+# http://dartthrowingchimp.wordpress.com/2012/09/21/democracy-is-not-fading-away/
 
 # Note: The script loads the data from a local folder, but you can download them from the Dataverse:
 # http://thedata.harvard.edu/dvn/dv/ulfelder
-
-# The plots appeared in this blog post:
-# http://dartthrowingchimp.wordpress.com/2012/09/21/democracy-is-not-fading-away/
 
 # Load data.
 dad <- read.csv("dad2010.csv")
