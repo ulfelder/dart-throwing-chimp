@@ -1,3 +1,6 @@
+# This goes with "An Experiment in Crowdsourced Coup Forecasting" (January 3, 2015)
+# https://dartthrowingchimp.wordpress.com/2015/01/03/an-experiment-in-crowdsourced-coup-forecasting/
+
 # This script assumes that the working directory contains the file called in line 12. It can be
 # downloaded from https://drive.google.com/file/d/0B5wyt4eDq98GcGVpeS0zR1lmTmc/view?usp=sharing
 
