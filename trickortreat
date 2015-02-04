@@ -1,3 +1,5 @@
+# This script creates a plot I tweeted on Halloween 2013 with counts of trick-or-treater arrivals at our house that night.
+
 counts <- c(0,4,1,5,6,10,12,7,7,9,4,2,2,0)
 times <- c("5:30","5:45","6:00","6:15","6:30","6:45","7:00","7:15","7:30","7:45","8:00","8:15","8:30","8:45")
 
