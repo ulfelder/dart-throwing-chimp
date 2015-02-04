@@ -1,3 +1,6 @@
+# This goes with "Refugee Flows and Disorder in the Global System" (June 20, 2014)
+# https://dartthrowingchimp.wordpress.com/2014/06/20/refugee-flows-and-disorder-in-the-global-system/
+
 # The first step assumes you have downloaded the Excel series for the Forcibly Displaced Populations data set from
 # the Center for Systemic Peace's INSCR Data Page and saved it to the working directory. The link address for that
 # data set is:
