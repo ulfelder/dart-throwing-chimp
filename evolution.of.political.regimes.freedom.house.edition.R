@@ -1,3 +1,6 @@
+# This goes with "The Evolution of Political Regimes, Freedom House Version" (February 13, 2014)
+# https://dartthrowingchimp.wordpress.com/2014/02/13/the-evolution-of-political-regimes-freedom-house-version/
+
 # Data in .csv format at this link. Load as 'fh', then skip to line 70 to make plots.
 https://drive.google.com/file/d/0B5wyt4eDq98GZ21LZXY1VVJNUTg/edit?usp=sharing
 
