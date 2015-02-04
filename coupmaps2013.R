@@ -1,20 +1,13 @@
-# ANIMATED MAP OF COUP ATTEMPTS WORLDWIDE, 1946-2013
-# Jay Ulfelder
-# 2013-11-22
-
-# Code to make charts in "Animated Map of Coup Attempts Worldwide, 1946-2013" (22 November 2013)
+# This script goes with "Animated Map of Coup Attempts Worldwide, 1946-2013" (22 November 2013):
+# https://dartthrowingchimp.wordpress.com/2013/11/22/animated-map-of-coup-attempts-worldwide-1946-2013/
 
 # DATA
-
 # Clear workspace.
 rm(list=ls(all=TRUE))
-
 # Get .csv from this link to my Google Drive
 # https://docs.google.com/file/d/0B5wyt4eDq98GQkJPcGx6cFNpd3M/edit?usp=sharing
-
 # Load it.
 df <- read.csv("coups.csv")
-
 
 # TIME-SERIES PLOTS
 # Create annual summaries
