@@ -79,6 +79,9 @@ coup.yr <- ddply(SPEED, .(year), summarise,
 # use to build an x-axis with the features I want after plotting. Sources:
 # http://stackoverflow.com/questions/8285759/r-barplot-axis-scaling
 # http://stackoverflow.com/questions/5237557/extracting-every-nth-element-of-a-vector
+# Also, barplot requires a vector or matrix, not a data frame, and it wants observations in columns and categories
+# in rows. So, to get stacked bars from a typical country-year TSCS data set, you need to transpose a matrix representing
+# only the columns of the original data frame you want (here, the counts without the year column.
 b <- barplot(t(as.matrix(coup.yr[,2:3])), plot = FALSE) # Gets vector of bar positions
 a <- b[seq(5, length(b), 5)] # Gets vector of every 5th bar pos, starting w/fifth (1950)
 # Now make the barplot I want
