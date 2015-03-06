@@ -5,36 +5,42 @@ rm(list=ls(all=TRUE))
 library(plyr)
 library(RColorBrewer)
 library(scales)
+library(countrycode)
 
 # Load the data directly from the web
 SPEED <- read.csv("http://www.clinecenter.illinois.edu/research/documents/ssp_public.csv", stringsAsFactors = FALSE)
 
+# Change the variable names to lower case, because inconsistency is annoying
+names(SPEED) <- tolower(names(SPEED))
+
+# Create unit to sum for counts of events
+SPEED$record <- 1
+
 # Get annual counts of events by type
-SPEED$record <- 1  # Create unit to count
-polatk.yr <- ddply(SPEED, .(year, EV_TYPE), summarise,
+polatk.yr <- ddply(SPEED, .(year, ev_type), summarise,
                    count = sum(record, na.rm = TRUE))
 
 # Plot those counts
 pal <- brewer.pal(4, "Paired") # Palette for color-blind qualitative comparisons
 png("speed.type.counts.by.year.png", width = 6, height = 9/16 * 6, unit = "in", bg = "white", res = 300)
 par(cex.axis = 0.75, mai = c(0.25, 0.25, 0.1, 0.1))
-with(subset(polatk.yr, EV_TYPE == 1), plot(count, type = "l",
+with(subset(polatk.yr, ev_type == 1), plot(count, type = "l",
      lwd = 2, col = pal[1],
      axes = FALSE, ylim = c(0, round(max(polatk.yr$count), -2)), xlab = "", ylab = ""))
 axis(1, at = seq(5,60,5), labels = seq(1950,2005,5), tick = FALSE, pos = 50)
 axis(2, las = 2, tick = FALSE, pos = 1)
 abline(h = seq(0, round(max(polatk.yr$count), -2), 200), lwd = 1, col = alpha("gray75", 0.5))
-with(subset(polatk.yr, EV_TYPE == 2), lines(count, lwd = 2, col = pal[2]))
-with(subset(polatk.yr, EV_TYPE == 4), lines(count, lwd = 2, col = pal[3]))
-with(subset(polatk.yr, EV_TYPE == 5), lines(count, lwd = 2, col = pal[4]))
+with(subset(polatk.yr, ev_type == 2), lines(count, lwd = 2, col = pal[2]))
+with(subset(polatk.yr, ev_type == 4), lines(count, lwd = 2, col = pal[3]))
+with(subset(polatk.yr, ev_type == 5), lines(count, lwd = 2, col = pal[4]))
 legend(x = 1, y = round(max(polatk.yr$count), -2) + 10,
        c("Political expression", "Political attacks", "Disruptive state acts", "Political reconfigurations"),
        cex = 0.75, lty = c(1,1), lwd = c(2,1), col = pal, bty = "n")
 dev.off()
 
-# Now for deaths
+# Now for estimated numbers of deaths
 deaths.yr <- ddply(SPEED, .(year), summarise,
-                   total = sum(N_KILLED_A, na.rm = TRUE))
+                   total = sum(n_killed_a, na.rm = TRUE))
 png("speed.deaths.by.year.png", width = 6, height = 9/16 * 6, unit = "in", bg = "white", res = 300)
 par(cex.axis = 0.75, mai = c(0.5, 0.5, 0.1, 0.1))
 with(deaths.yr, plot(total, type = "l",
@@ -47,7 +53,7 @@ dev.off()
 
 # And then for index of violence intensity
 scale.yr <- ddply(SPEED, .(year), summarise,
-                   total = sum(POL_VIOL, na.rm = TRUE))
+                   total = sum(pol_viol, na.rm = TRUE))
 png("speed.violence.intensity.by.year.png", width = 6, height = 9/16 * 6, unit = "in", bg = "white", res = 300)
 par(cex.axis = 0.75, mai = c(0.5, 0.5, 0.1, 0.1))
 with(scale.yr, plot(total, type = "l",
@@ -59,11 +65,11 @@ abline(h = seq(0,2000,500), lwd = 1, col = alpha("gray75", 0.5))
 dev.off()
 
 # And then for mass demonstrations and strikes, a subset of expressive events
-exp.yr <- ddply(SPEED, .(year, EXP_TYPE), summarise,
+exp.yr <- ddply(SPEED, .(year, exp_type), summarise,
                    count = sum(record, na.rm = TRUE))
 png("speed.protest.counts.by.year.png", width = 6, height = 9/16 * 6, unit = "in", bg = "white", res = 300)
 par(cex.axis = 0.75, mai = c(0.25, 0.25, 0.1, 0.1))
-with(subset(exp.yr, EXP_TYPE == 4), plot(count, type = "l",
+with(subset(exp.yr, exp_type == 4), plot(count, type = "l",
      lwd = 2, col = "forestgreen",
      axes = FALSE, ylim = c(0, 250), xlab = "", ylab = ""))
 axis(1, at = seq(5,60,5), labels = seq(1950,2005,5), tick = FALSE, pos = 10)
@@ -93,5 +99,22 @@ barplot(t(as.matrix(coup.yr[,2:3])), border = "white", space = 0.2,
      legend = c("successful", "failed"),
      args.legend = list(x = max(a), y = 25, bty = "n", border = "white", cex = 0.75))
 axis(1, at = a, labels = seq(1950,2005,5), tick = FALSE, pos = 1.5)
+axis(2, las = 2, tick = FALSE, pos = 1)
+dev.off()
+
+## COVERAGE BY COUNTRY
+country <- ddply(SPEED, .(cowcode), summarise,
+                   count = sum(record, na.rm = TRUE))
+# Add country names via countrycode package
+country$country <- countrycode(country$cowcode, "cown", "country.name")
+country <- country[order(-country$count),]
+# Get vector of bar positions to use in eventual plot (see coup example above)
+z <- barplot(t(as.matrix(country[,"count"])), plot = FALSE)[1:25]
+# Now make the barplot I want
+png("speed.event.counts.by.country.png", width = 6, height = 4.5, unit = "in", bg = "white", res = 300)
+par(cex.axis = 0.5, mai = c(1.5, 0.25, 0.25, 0.1))
+barplot(t(as.matrix(country[,"count"]))[1:25], border = "white", space = 0.2,
+     axes = FALSE, col = "gray50")
+axis(1, at = z, labels = country$country[1:25], tick = FALSE, pos = 50, las = 2)
 axis(2, las = 2, tick = FALSE, pos = 1)
 dev.off()
