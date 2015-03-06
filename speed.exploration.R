@@ -70,3 +70,25 @@ axis(1, at = seq(5,60,5), labels = seq(1950,2005,5), tick = FALSE, pos = 10)
 axis(2, las = 2, tick = FALSE, pos = 1)
 abline(h = seq(0, 250, 50), lwd = 1, col = alpha("gray75", 0.5))
 dev.off()
+
+# Coup activity
+coup.yr <- ddply(SPEED, .(year), summarise,
+                   coup.s = sum(coup, na.rm = TRUE),
+                   coup.f = sum(coup_failed, na.rm = TRUE) )
+# X-axis scaling is funky in barplot, so the next two lines get me the positions I want to
+# use to build an x-axis with the features I want after plotting. Sources:
+# http://stackoverflow.com/questions/8285759/r-barplot-axis-scaling
+# http://stackoverflow.com/questions/5237557/extracting-every-nth-element-of-a-vector
+b <- barplot(t(as.matrix(coup.yr[,2:3])), plot = FALSE) # Gets vector of bar positions
+a <- b[seq(5, length(b), 5)] # Gets vector of every 5th bar pos, starting w/fifth (1950)
+# Now make the barplot I want
+png("speed.coup.counts.by.year.png", width = 6, height = 9/16 * 6, unit = "in", bg = "white", res = 300)
+par(cex.axis = 0.66, mai = c(0.25, 0.25, 0.25, 0.1))
+barplot(t(as.matrix(coup.yr[,2:3])), border = "white", space = 0.2,
+     axes = FALSE, ylim = c(0,25),
+     col = c("darkolivegreen", "darkolivegreen2"),
+     legend = c("successful", "failed"),
+     args.legend = list(x = max(a), y = 25, bty = "n", border = "white", cex = 0.75))
+axis(1, at = a, labels = seq(1950,2005,5), tick = FALSE, pos = 1.5)
+axis(2, las = 2, tick = FALSE, pos = 1)
+dev.off()
