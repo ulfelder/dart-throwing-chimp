@@ -16,19 +16,19 @@ unlink(temp)
 names(gwf) <- c(names(gwf)[1:2], gsub("gwf_", "", x = names(gwf)[3:length(names(gwf))], fixed = TRUE) )
 
 # These are interval data, so we need to create an event marker that differentiates between intervals and
-# left- or right-censoring.
+# left- or right-censoring. I think. If I'm wrong about this or am doing it wrong, please let me know.
 gwf$event <- gwf$fail
 gwf$event <- with(gwf, ifelse(fail == 0 & year == 1946, 2, event)) # Left-censored
 gwf$event <- with(gwf, ifelse(fail == 0 & year == 2010, 3, event)) # Right-censored
 
-# Now estimate Kaplan-Meier survival curves by authoritarian type
+# Now estimate Kaplan-Meier survival curves by authoritarian type (regimetype).
 km.by.type <- survfit(Surv(time = duration - 1, time2 = duration, event = event, type = "interval") ~ regimetype,
      data = gwf,
      subset=(is.na(regimetype) == FALSE), # Restrict to autocracies
      id = cowcode,
      type = "kaplan-meier")
 
-# Extract clean version of types for legend labels
+# Extract clean version of types for legend labels.
 types <- gsub("regimetype=", "", names(km.by.type$strata), fixed = TRUE)
 
 # Get a pallette with 10 colors for the 10 types
