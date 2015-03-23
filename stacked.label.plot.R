@@ -1,3 +1,6 @@
+# Associated with the post "The Stacked Label Plot"
+# http://wp.me/p1domH-1Gs
+
 # Load required packages and functions
 library(DataCombine)
 
