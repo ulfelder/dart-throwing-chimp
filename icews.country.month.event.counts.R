@@ -47,47 +47,10 @@ read.icews <- function(year) {
      return(counts.wide)
 }
 
-# I'm sure there's a more efficient way to do the rest of this, but I couldn't quickly see my way to it, so: iterate
-# that function over the available complete years...
-I.95 <- read.icews(1995)
-I.96 <- read.icews(1996)
-I.97 <- read.icews(1997)
-I.98 <- read.icews(1998)
-I.99 <- read.icews(1999)
-I.00 <- read.icews(2000)
-I.01 <- read.icews(2001)
-I.02 <- read.icews(2002)
-I.03 <- read.icews(2003)
-I.04 <- read.icews(2004)
-I.05 <- read.icews(2005)
-I.06 <- read.icews(2006)
-I.07 <- read.icews(2007)
-I.08 <- read.icews(2008)
-I.09 <- read.icews(2009)
-I.10 <- read.icews(2010)
-I.11 <- read.icews(2011)
-I.12 <- read.icews(2012)
-I.13 <- read.icews(2013)
-
-# ...and then merge all of those sequentially.
-rollup <- merge(I.95, I.96, all = TRUE)
-rollup <- merge(rollup, I.97, all = TRUE)
-rollup <- merge(rollup, I.98, all = TRUE)
-rollup <- merge(rollup, I.99, all = TRUE)
-rollup <- merge(rollup, I.00, all = TRUE)
-rollup <- merge(rollup, I.01, all = TRUE)
-rollup <- merge(rollup, I.02, all = TRUE)
-rollup <- merge(rollup, I.03, all = TRUE)
-rollup <- merge(rollup, I.04, all = TRUE)
-rollup <- merge(rollup, I.05, all = TRUE)
-rollup <- merge(rollup, I.06, all = TRUE)
-rollup <- merge(rollup, I.07, all = TRUE)
-rollup <- merge(rollup, I.08, all = TRUE)
-rollup <- merge(rollup, I.09, all = TRUE)
-rollup <- merge(rollup, I.10, all = TRUE)
-rollup <- merge(rollup, I.11, all = TRUE)
-rollup <- merge(rollup, I.12, all = TRUE)
-rollup <- merge(rollup, I.13, all = TRUE)
+# Apply that function to desired range of years and merge the results; thanks to Gonzalo Rivero for showing me this 
+# efficient approach.
+yrdata <- llply(1995:2013, read.icews)
+rollup <- Reduce(function(...) merge(..., all=TRUE), yrdata)
 
 # The data set we have now created does not include rows for countries that have no
 # events. To make sure we have observations for all country-months, we need to create
