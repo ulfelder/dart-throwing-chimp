@@ -72,3 +72,18 @@ whole$total <- rowSums(whole[,4:dim(whole)[2]])
 
 # Write that out
 write.csv(whole, "icews.country.month.counts.csv", row.names = FALSE)
+
+# If you want to merge the ICEWS Events of Interest Ground Truth Data with that table, you can do this. NOTE: The first bit,
+# which ingests the ground truth file, will need a proper file path. That file should NOT be stored in the same directory
+# as the event data files, or else those years in the ground-truth file name will screw up the ingestion of the event
+# data.
+GT <- read.csv("gtds_2001.to.feb.2014.csv", stringsAsFactors = FALSE) 
+GT$country <- tolower(GT$country)
+whole$country <- tolower(whole$country)
+mismatches <- unique(GT$country)[which(!unique(GT$country) %in% unique(whole$country))] # Short lists mismatches
+unique(whole$country) # Used to find the required replacements by eye
+GT$country[GT$country == mismatches[1]] <- "cote d'ivoire"
+GT$country[GT$country == mismatches[2]] <- "libya"
+GT$country[GT$country == mismatches[3]] <- "syria"
+GT <- subset(GT, year < 2014, select = c(country, year, month, ins, reb, dpc, erv, ic))
+whole <- merge(whole, GT, all.x = TRUE)
