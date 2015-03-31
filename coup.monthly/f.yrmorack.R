@@ -13,7 +13,11 @@
 #
 # Frame <- f.yrmorack("1960-01-01", "2013-12-31")
 #
-# makes a country-month data set ranging from Jan 1960 to Dec 2013.
+# makes a country-month data set ranging from Jan 1960 to Dec 2013. The result includes three columns:
+#
+# country (str) -- country name, e.g., "Afghanistan"
+# year (int) -- the year, e.g., 1960
+# month (int) -- the month, e.g., 1
 #
 # Country list and most dates sourced to:
 # Wikipedia: http://en.wikipedia.org/wiki/List_of_sovereign_states_by_date_of_formation
