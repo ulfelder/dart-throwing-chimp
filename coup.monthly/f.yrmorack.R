@@ -3,6 +3,8 @@
 # countries with populations larger than 500,000 as of 2014. I use it as scaffolding for the construction of country-month
 # analysis files from other sources.
 #
+# The function requires the package 'DataCombine'.
+#
 # The function is called f.yrmorack, and you call it like this:
 #
 # DataSetYouWantToMake <- f.yrmorack(<start date>, <end date>)
