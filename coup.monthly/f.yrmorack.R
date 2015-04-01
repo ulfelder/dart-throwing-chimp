@@ -273,13 +273,21 @@ f.yrmorack <- function(startdate, enddate) {
           NorthVietnam, SouthVietnam)
 
      # Aggregate
-     tmpdate <- as.Date(lubridate::ymd(paste0(rack$year, "-", rack$month, "-01")))
-     rack <- rack[tmpdate > startdate,]
-     
      rack <- as.data.frame(rbind(africa, americas, asia, europe, fsu, oceania, defunct),
           stringsAsFactors = FALSE)
      
+     print(unique(rack$country))
+     rack$iso3c <- countrycode::countrycode(rack$country, "country.name", "iso3c")
+     rack[rack$country=="North Yemen", "iso3c"] <- "YEM"
+     rack[rack$country=="South Yemen", "iso3c"] <- "YMD"
+     rack[rack$country=="North Vietnam", "iso3c"] <- "VDR"
+     rack[rack$country=="Serbia and Montenegro", "iso3c"] <- "YMD"
+     rack[rack$country=="Soviet Union", "iso3c"] <- "SUN"
+     rack[rack$country=="Serbia and Montenegro", "iso3c"] <- "SCG"
 
+     tmpdate <- as.Date(lubridate::ymd(paste0(rack$year, "-", rack$month, "-01")))
+     rack <- rack[tmpdate >= startdate,]
+     print(unique(rack$country))
      return(rack)
 
 }
