@@ -13,11 +13,12 @@
 #
 # Frame <- f.yrmorack("1960-01-01", "2013-12-31")
 #
-# makes a country-month data set ranging from Jan 1960 to Dec 2013. The result includes three columns:
+# makes a country-month data set ranging from Jan 1960 to Dec 2013. The result includes four columns:
 #
 # country (str) -- country name, e.g., "Afghanistan"
 # year (int) -- the year, e.g., 1960
 # month (int) -- the month, e.g., 1
+# iso3c (str) -- the ISO code, e.g., "AFG"
 #
 # Country list and most dates sourced to:
 # Wikipedia: http://en.wikipedia.org/wiki/List_of_sovereign_states_by_date_of_formation
@@ -275,7 +276,17 @@ f.yrmorack <- function(startdate, enddate) {
      # Aggregate
      rack <- as.data.frame(rbind(africa, americas, asia, europe, fsu, oceania, defunct),
           stringsAsFactors = FALSE)
+     
+     rack$iso3c <- countrycode::countrycode(rack$country, "country.name", "iso3c")
+     rack[rack$country=="North Yemen", "iso3c"] <- "YEM"
+     rack[rack$country=="South Yemen", "iso3c"] <- "YMD"
+     rack[rack$country=="North Vietnam", "iso3c"] <- "VDR"
+     rack[rack$country=="Serbia and Montenegro", "iso3c"] <- "YMD"
+     rack[rack$country=="Soviet Union", "iso3c"] <- "SUN"
+     rack[rack$country=="Serbia and Montenegro", "iso3c"] <- "SCG"
 
+     tmpdate <- as.Date(lubridate::ymd(paste0(rack$year, "-", rack$month, "-01")))
+     rack <- rack[tmpdate >= startdate,]
      return(rack)
 
 }
