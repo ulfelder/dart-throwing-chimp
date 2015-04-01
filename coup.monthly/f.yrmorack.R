@@ -277,6 +277,7 @@ f.yrmorack <- function(startdate, enddate) {
      rack <- as.data.frame(rbind(africa, americas, asia, europe, fsu, oceania, defunct),
           stringsAsFactors = FALSE)
      
+     # Add ISO3C country codes using countrycode package and hard-coding for missings
      rack$iso3c <- countrycode::countrycode(rack$country, "country.name", "iso3c")
      rack[rack$country=="North Yemen", "iso3c"] <- "YEM"
      rack[rack$country=="South Yemen", "iso3c"] <- "YMD"
@@ -285,8 +286,13 @@ f.yrmorack <- function(startdate, enddate) {
      rack[rack$country=="Soviet Union", "iso3c"] <- "SUN"
      rack[rack$country=="Serbia and Montenegro", "iso3c"] <- "SCG"
 
+     # Get rid of rows inadvertently created for countries that died before the start date
      tmpdate <- as.Date(lubridate::ymd(paste0(rack$year, "-", rack$month, "-01")))
      rack <- rack[tmpdate >= startdate,]
+     
+     # Order by country name and date
+     rack <- rack[order(rack$country, rack$year, rack$month),]
+     
      return(rack)
 
 }
