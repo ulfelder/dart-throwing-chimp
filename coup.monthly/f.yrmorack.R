@@ -276,7 +276,6 @@ f.yrmorack <- function(startdate, enddate) {
      rack <- as.data.frame(rbind(africa, americas, asia, europe, fsu, oceania, defunct),
           stringsAsFactors = FALSE)
      
-     print(unique(rack$country))
      rack$iso3c <- countrycode::countrycode(rack$country, "country.name", "iso3c")
      rack[rack$country=="North Yemen", "iso3c"] <- "YEM"
      rack[rack$country=="South Yemen", "iso3c"] <- "YMD"
@@ -287,7 +286,6 @@ f.yrmorack <- function(startdate, enddate) {
 
      tmpdate <- as.Date(lubridate::ymd(paste0(rack$year, "-", rack$month, "-01")))
      rack <- rack[tmpdate >= startdate,]
-     print(unique(rack$country))
      return(rack)
 
 }
