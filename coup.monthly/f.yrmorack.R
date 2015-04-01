@@ -282,7 +282,6 @@ f.yrmorack <- function(startdate, enddate) {
      rack[rack$country=="North Yemen", "iso3c"] <- "YEM"
      rack[rack$country=="South Yemen", "iso3c"] <- "YMD"
      rack[rack$country=="North Vietnam", "iso3c"] <- "VDR"
-     rack[rack$country=="Serbia and Montenegro", "iso3c"] <- "YMD"
      rack[rack$country=="Soviet Union", "iso3c"] <- "SUN"
      rack[rack$country=="Serbia and Montenegro", "iso3c"] <- "SCG"
 
