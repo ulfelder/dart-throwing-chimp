@@ -67,9 +67,6 @@ names(dummy) <- c("country", "year", "month")
 whole <- merge(dummy, rollup, all.x = TRUE)
 whole[is.na(whole)] <- 0
 
-# Add column with count of all events per country-month for possible use in normalization
-whole$total <- rowSums(whole[,4:dim(whole)[2]])
-
 # Write that out
 write.csv(whole, "icews.country.month.counts.csv", row.names = FALSE)
 
