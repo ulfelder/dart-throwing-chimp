@@ -33,7 +33,7 @@ read.icews <- function(year) {
      # start in long format because that makes it easier to generate all the desired counts in
      # one go.
      require(plyr)
-     counts.long <- ddply(file, .(Source.Country, year, month, CAMEO.Code), summarise,
+     counts.long <- ddply(file, .(Country, year, month, CAMEO.Code), summarise,
           count = sum(event))
      names(counts.long) <- c("country", "year", "month", "code", "count")
      counts.long$country[counts.long$country == ""] <- "none assigned"
