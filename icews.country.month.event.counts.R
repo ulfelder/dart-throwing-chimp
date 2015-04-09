@@ -75,7 +75,8 @@ write.csv(whole, "icews.country.month.counts.csv", row.names = FALSE)
 unrest <- ddply(whole, .(year, month), summmarise,
      protest = cameo.1411 + cameo.1414 + cameo.1431 + cameo.1434 + cameo.1441 + cameo.1444 + cameo.1451 + cameo.1454,
      repression = cameo.172 + cameo.175 + cameo.1721 + cameo.1722 + cameo.1723 + cameo.1724,
-     fighting = cameo.1823 + cameo.183 + cameo.184 + cameo.185 + cameo.186 + cameo.1831 + cameo.1832 + cameo.1833)
+     fighting = cameo.1823 + cameo.183 + cameo.184 + cameo.185 + cameo.186 + cameo.1831 + cameo.1832 + cameo.1833 +
+          cameo.200 + cameo.201 + cameo.202 + cameo.203 + cameo.204 + cameo.2041 + cameo.2042)
 
 # Generate triptych plot of those counts
 png("icews.global.unrest.trends.png", bg = "white", width = 6, height = 8, unit = "in", res = 150)
