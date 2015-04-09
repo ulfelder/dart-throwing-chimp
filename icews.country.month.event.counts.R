@@ -21,7 +21,8 @@ read.icews <- function(year) {
      # archive. The last finally extracts and loads that file.
      zname <- list.files()[grep(as.character(year), list.files())]
      tname <- substr(zname, 1, 30)
-     file <- read.delim(unz(zname, tname), stringsAsFactors = FALSE)
+     # In next line, the quote & comment stuff is needed to deal with snag reading some character in 2002 file.
+     file <- read.delim(unz(zname, tname), quote=NULL, comment="", stringsAsFactors=FALSE)
 
      # Now we'll add some variables to make later manipulation easier.
      file$year <- as.integer(substr(file$Event.Date, 1, 4))
