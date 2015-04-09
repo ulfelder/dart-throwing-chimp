@@ -68,8 +68,38 @@ names(dummy) <- c("country", "year", "month")
 whole <- merge(dummy, rollup, all.x = TRUE)
 whole[is.na(whole)] <- 0
 
-# Write that out
+# Write that out if you like for use elsewhere.
 write.csv(whole, "icews.country.month.counts.csv", row.names = FALSE)
+
+# Get world-month counts of selected subsets for plotting
+unrest <- ddply(whole, .(year, month), summmarise,
+     protest = cameo.1411 + cameo.1414 + cameo.1431 + cameo.1434 + cameo.1441 + cameo.1444 + cameo.1451 + cameo.1454,
+     repression = cameo.172 + cameo.175 + cameo.1721 + cameo.1722 + cameo.1723 + cameo.1724,
+     fighting = cameo.1823 + cameo.183 + cameo.184 + cameo.185 + cameo.186 + cameo.1831 + cameo.1832 + cameo.1833)
+
+# Generate triptych plot of those counts
+png("icews.global.unrest.trends.png", bg = "white", width = 6, height = 8, unit = "in", res = 150)
+par(mfrow=c(3,1), mai=c(0.5, 0.25, 0.25, 0.1), cex.axis = 0.75, cex.main = 1)
+
+plot(unrest$protest, type = "l", lwd = 2, col = "#4daf4a",
+     axes = FALSE, xlab = "", ylab = "", main = "Protest with Regime-Altering Aims")
+segments(1, 0, dim(unrest)[1], 0, lwd = 0.5, col = "gray40")
+axis(1, at = seq(1, dim(unrest)[1], 12) , labels = (1995:2013), tick = FALSE, las = 2, pos = 5)
+axis(2, las = 2, pos = 3, tick = FALSE)
+
+plot(unrest$repression, type = "l", lwd = 2, col = "#377eb8",
+     axes = FALSE, xlab = "", ylab = "", main = "Repression")
+segments(1, 0, dim(unrest)[1], 0, lwd = 0.5, col = "gray40")
+axis(1, at = seq(1, dim(unrest)[1], 12) , labels = (1995:2013), tick = FALSE, las = 2, pos = 25)
+axis(2, las = 2, pos = 3, tick = FALSE)
+
+plot(unrest$fighting, type = "l", lwd = 2, col = "#e41a1c",
+     axes = FALSE, xlab = "", ylab = "", main = "Fighting")
+segments(1, 0, dim(unrest)[1], 0, lwd = 0.5, col = "gray40")
+axis(1, at = seq(1, dim(unrest)[1], 12) , labels = (1995:2013), tick = FALSE, las = 2, pos = 35)
+axis(2, las = 2, pos = 3, tick = FALSE)
+
+dev.off()
 
 # If you want to merge the ICEWS Events of Interest Ground Truth Data with that table, you can do this. NOTE: The first bit,
 # which ingests the ground truth file, will need a proper file path. That file should NOT be stored in the same directory
