@@ -11,7 +11,7 @@ library(scales)
 PRIO <- read.csv("http://www.pcr.uu.se/digitalAssets/124/124932_1ucdp_one-sidedviolencedataset1.4-2014.csv",
      stringsAsFactors = FALSE)
 
-# Use 'dplyr' to get annual, global sums of deaths for low, best, and high estimates.
+# Use ddply function from 'plyr' to get annual, global sums of deaths for low, best, and high estimates.
 PRIO.yr <- ddply(PRIO, .(Year), summarise,
      low = sum(LowFatalityEstimate),
      best = sum(BestFatalityEstimate),
@@ -24,6 +24,8 @@ Pop <- WDI(country="1W", indicator="SP.POP.TOTL", extra=FALSE,
      start=min(PRIO.yr$year), end=max(PRIO.yr$year))
 Pop$iso2c <- Pop$country <- NULL
 names(Pop) <- c("population", "year")
+
+# Change variable names to lowercase to prepare for merge to come.
 PRIO.yr <- merge(PRIO.yr, Pop)
 
 # Following Pinker, use UCDP's high estimates to generate rates per 100,000.
