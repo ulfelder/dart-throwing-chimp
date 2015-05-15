@@ -18,15 +18,15 @@ PRIO.yr <- ddply(PRIO, .(Year), summarise,
      high = sum(HighFatalityEstimate))
 names(PRIO.yr) <- tolower(names(PRIO.yr))
 
+# Change variable names to lowercase to prepare for merge to come.
+PRIO.yr <- merge(PRIO.yr, Pop)
+
 # Use 'WDI' package to get annual, global population estimates for the time period covered by
 # the UCDP data set, then cut unneeded columns and fix names for merging with PRIO.yr. 
 Pop <- WDI(country="1W", indicator="SP.POP.TOTL", extra=FALSE,
      start=min(PRIO.yr$year), end=max(PRIO.yr$year))
 Pop$iso2c <- Pop$country <- NULL
 names(Pop) <- c("population", "year")
-
-# Change variable names to lowercase to prepare for merge to come.
-PRIO.yr <- merge(PRIO.yr, Pop)
 
 # Following Pinker, use UCDP's high estimates to generate rates per 100,000.
 PRIO.yr$rate <- with(PRIO.yr, (high/(population/100000)))
