@@ -4,6 +4,9 @@
 # It will need to be edited if the number of months covered changes. The summarizing parts will work fine;
 # it's just that some aspects of the plotting code (e.g., position of axes) are based on time series with 53 observations.
 
+# You can download the data file I used here from my Google Drive, here:
+# https://drive.google.com/file/d/0B5wyt4eDq98GUWNwTUg0ZGpWVHM/view?usp=sharing
+
 library(XLConnect)
 library(plyr)
 library(scales)
