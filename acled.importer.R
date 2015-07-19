@@ -2,6 +2,7 @@
 # data. The downside is that it will need to be modified as the realtime data are updated, or if the url or filename for
 # the historical data changes. The upside is that those changes only need to be made in the "File info" section that
 # starts on line 21. Unless the basic structure of the files or their variable names change, the rest should keep working.
+# See https://dartthrowingchimp.wordpress.com/2015/07/19/acled-in-r/ for a blog post discussing the script.
 
 # Load required packages
 library(dplyr)
