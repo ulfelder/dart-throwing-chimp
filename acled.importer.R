@@ -3,6 +3,10 @@
 # the historical data changes. The upside is that those changes only need to be made in the "File info" section that
 # starts on line 15. Unless the structure of the files or their variable names change, the rest should keep working.
 
+# Load required packages, which are only used in country-month aggregation stage
+library(dplyr)
+library(tidyr)
+
 # Function to get zip file and extract csv using vector of two string objects and returning data frame
 getfile <- function(vector) {
   temp <- tempfile()
@@ -20,11 +24,23 @@ realtime.url <- "http://www.acleddata.com/wp-content/uploads/2015/07/ACLED-All-A
 realtime.file <- "ACLED All Africa File_20150101 to 20150711_csv.csv"
 
 # Data fetching
-ACLED.targets <- list(c(past.url, past.file), c(realtime.url, realtime.file))
-ACLED.list <- lapply(ACLED.targets, getfile)
-names(ACLED.list[[1]]) <- sub("GEO_PRECIS", "GEO_PRECISION", names(ACLED.list[[1]])) # Fix names of location vars to match Version 5
+ACLED.targets <- list(c(past.url, past.file), c(realtime.url, realtime.file)) # Make list of target dataset info
+ACLED.list <- lapply(ACLED.targets, getfile) # Use function created above to ingest files into list form
+names(ACLED.list[[1]]) <- sub("GEO_PRECIS", "GEO_PRECISION", names(ACLED.list[[1]])) # Fix name of var in Version 5 to match realtime
 names(ACLED.list[[2]]) <- gsub("ADM_LEVEL_", "ADMIN", names(ACLED.list[[2]])) # Fix names of location vars to match Version 5
-ACLED <- Reduce(function(...) merge(..., all=TRUE), ACLED.list)
-names(ACLED) <- tolower(make.names(names(ACLED)))
+ACLED <- Reduce(function(...) merge(..., all=TRUE), ACLED.list) # Merge all files in the list, keeping all non-duplicate rows
+names(ACLED) <- tolower(names(ACLED)) # Convert var names in merged file to lower case
 
+# Inspect the result to make sure it's worked as expected
 str(ACLED)
+
+# Create new data frame with country-month counts of each event type and a count all battles of any type
+ACLED.cm <- ACLED %>%
+  mutate(event_type = make.names(tolower(event_type))) %>% # Change event type labels for upcoming use as var names, and to deal with "Remote Violence", "Remote violence"
+  mutate(month = as.numeric(substr(event_date, 4, 5))) %>%  # Create month var to use in grouping
+  group_by(gwno, year, month, event_type) %>%  # Define groupings and re-order data accordingly
+  tally(.) %>%  # Get counts of records in each group (i.e., each country/year/month/type subset)
+  spread(., key = event_type, value = n, fill = 0) %>% # Make data wide by spreading event types into columns with tidyr's spread() function
+  left_join(expand(., gwno, year, month), .) %>% # Expand data frame to cover all possible country-months by left-joining tallies to complete series created with expand() from tidyr
+  replace(is.na(.), 0) %>%  # Replace all NAs created by that last step with 0s
+  mutate(., battles = rowSums(select(., grep("battle", names(.))))) # Create var summing counts of all variables with "battle" in their names
