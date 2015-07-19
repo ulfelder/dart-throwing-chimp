@@ -10,16 +10,8 @@ library(tidyr)
 library(countrycode)
 library(ggplot2)
 
-# Function to get zip file and extract csv using vector of two string objects and returning data frame
-getfile <- function(vector) {
-  temp <- tempfile()
-  download.file(vector[1], temp)
-  df <- read.csv(unz(temp, vector[2]), stringsAsFactors=FALSE)
-  unlink(temp)
-  return(df)
-}
-
-# Info on files to be ingested. To get this, I did the following on a Windows-driven PC:
+# Info on files to be ingested. **THIS IS THE PART THAT NEEDS TO BE UPDATED BY HAND AS ACLED POSTS UPDATES.** To get
+# the strings that follow, I did the following on a Windows-driven PC:
 # 1. Pointed my browser to http://www.acleddata.com/data/
 # 2. Clicked on http://www.acleddata.com/data/version-5-data-1997-2014/ to get info on historical data
 # 3. Right-clicked on the (csv) hyperlink for 'ACLED Version 5 (1997 – 2014) standard file' and selected 'Copy link address'
@@ -36,6 +28,15 @@ past.file <- "ACLED-Version-5-All-Africa-1997-2014_dyadic_Updated_no_notes.csv"
 
 realtime.url <- "http://www.acleddata.com/wp-content/uploads/2015/07/ACLED-All-Africa-File_20150101-to-20150711_csv.zip"
 realtime.file <- "ACLED All Africa File_20150101 to 20150711_csv.csv"
+
+# Function to get zip file and extract csv using vector of two string objects and returning data frame
+getfile <- function(vector) {
+  temp <- tempfile()
+  download.file(vector[1], temp)
+  df <- read.csv(unz(temp, vector[2]), stringsAsFactors=FALSE)
+  unlink(temp)
+  return(df)
+}
 
 # Data fetching
 ACLED.targets <- list(c(past.url, past.file), c(realtime.url, realtime.file)) # Make list of target dataset info
