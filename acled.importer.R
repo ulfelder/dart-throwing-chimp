@@ -1,7 +1,7 @@
 # This script will download, unzip, prep, and merge ACLED's Version 5 historical data (1997-2014) and its realtime
 # data. The downside is that it will need to be modified as the realtime data are updated, or if the url or filename for
 # the historical data changes. The upside is that those changes only need to be made in the "File info" section that
-# starts on line 15. Unless the structure of the files or their variable names change, the rest should keep working.
+# starts on line 19. Unless the basic structure of the files or their variable names change, the rest should keep working.
 
 # Load required packages, which are only used in country-month aggregation stage
 library(dplyr)
@@ -16,7 +16,18 @@ getfile <- function(vector) {
   return(df)
 }
 
-# File info, copied from http://www.acleddata.com/data/ pages and 
+# Info on files to be ingested. To get this, I did the following on a Windows-driven PC:
+# 1. Pointed my browser to http://www.acleddata.com/data/
+# 2. Clicked on http://www.acleddata.com/data/version-5-data-1997-2014/ to get info on historical data
+# 3. Right-clicked on the (csv) hyperlink for 'ACLED Version 5 (1997 – 2014) standard file' and selected 'Copy link address'
+# 4. Used Ctrl-V to paste that in between quotation marks in the past.url slot below.
+# 5. Left-clicked on that same link to download the 
+# 6. Double-clicked on the downloaded .zip file to inspect the contents
+# 7. Right-clicked on the .csv in the resulting window, selected 'Properties', and used Ctrl-C to copy the csv file's name
+# 8. Used Ctrl-V to paste that file name in between quotation marks in the past.file slot below
+# 9. Back on the ACLED site, clicked on 'Realtime Data (2015)'
+# 10. Repeated steps 3 through 8 for 'Realtime 2015 All Africa File (updated 11th July 2015)(csv)' and the realtime.* slots below
+
 past.url <- "http://www.acleddata.com/wp-content/uploads/2015/06/ACLED-Version-5-All-Africa-1997-2014_dyadic_Updated_csv-no-notes.zip"
 past.file <- "ACLED-Version-5-All-Africa-1997-2014_dyadic_Updated_no_notes.csv"
 
