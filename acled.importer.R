@@ -3,7 +3,7 @@
 # the historical data changes. The upside is that those changes only need to be made in the "File info" section that
 # starts on line 21. Unless the basic structure of the files or their variable names change, the rest should keep working.
 
-# Load required packages, which are only used in country-month aggregation stage
+# Load required packages
 library(dplyr)
 library(tidyr)
 library(countrycode)
