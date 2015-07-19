@@ -72,7 +72,7 @@ ACLED.cm %>%
 # Monthly counts of battles by country (small multiples)
 ACLED.cm %>%
   mutate(., yearmo = as.Date(paste(year, ifelse(month < 10, paste0("0", month), month), "01", sep="-"))) %>%
-  qplot(data = ., x = yearmo, y = battles, facets = ~country, geom = "line", xlab="Month", ylab="Event count: battles")
+  qplot(data = ., x = yearmo, y = battles, facets = ~country, geom = "line", xlab="Month", ylab="Event count: battles") %>%
   print
-# If you'd rather save that plot to your hard drive, replace the 'print' line with one like this:
+# If you'd rather save that plot to your hard drive, replace the 'print %>%' line with one like this:
 # ggsave("ACLED.battles.ts.png", path = "[path to directory in which to save it]", width = 6, height = 8, units="in")
