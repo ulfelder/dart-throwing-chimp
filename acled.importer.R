@@ -21,7 +21,7 @@ getfile <- function(vector) {
 # 2. Clicked on http://www.acleddata.com/data/version-5-data-1997-2014/ to get info on historical data
 # 3. Right-clicked on the (csv) hyperlink for 'ACLED Version 5 (1997 – 2014) standard file' and selected 'Copy link address'
 # 4. Used Ctrl-V to paste that in between quotation marks in the past.url slot below.
-# 5. Left-clicked on that same link to download the 
+# 5. Left-clicked on that same link to download the .zip file
 # 6. Double-clicked on the downloaded .zip file to inspect the contents
 # 7. Right-clicked on the .csv in the resulting window, selected 'Properties', and used Ctrl-C to copy the csv file's name
 # 8. Used Ctrl-V to paste that file name in between quotation marks in the past.file slot below
