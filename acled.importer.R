@@ -1,7 +1,7 @@
 # This script will download, unzip, prep, and merge ACLED's Version 5 historical data (1997-2014) and its realtime
 # data. The downside is that it will need to be modified as the realtime data are updated, or if the url or filename for
 # the historical data changes. The upside is that those changes only need to be made in the "File info" section that
-# starts on line 21. Unless the basic structure of the files or their variable names change, the rest should keep working.
+# starts on line 13. Unless the basic structure of the files or their variable names change, the rest should keep working.
 # See https://dartthrowingchimp.wordpress.com/2015/07/19/acled-in-r/ for a blog post discussing the script.
 
 # Load required packages
@@ -21,7 +21,14 @@ library(ggplot2)
 # 7. Right-clicked on the .csv in the resulting window, selected 'Properties', and used Ctrl-C to copy the csv file's name
 # 8. Used Ctrl-V to paste that file name in between quotation marks in the past.file slot below
 # 9. Back on the ACLED site, clicked on 'Realtime Data (2015)'
-# 10. Repeated steps 3 through 8 for 'Realtime 2015 All Africa File (updated 11th July 2015)(csv)' and the realtime.* slots below
+# 10. Repeated steps 3-8 for 'Realtime 2015 All Africa File (updated 11th July 2015)(csv)' and the realtime.* slots below
+# Also note that the csv of the historical data does not include the Notes field because special characters in those fields
+# make it difficult to read cleanly. If you want to see the notes, you need to download the .xslx version, which includes
+# that column. Once downloaded, you can read that spreadsheet into R with these lines:
+# library(readxl)
+# ACLED.v5.xlsx <- read_excel("ACLED-Version-5-All-Africa-1997-2014_dyadic_Update.xlsx", 1,
+#  col_types = c("numeric", "text", "numeric", "date", rep("numeric",2), rep("text",3), "numeric", rep("text",2),
+#  rep("numeric",2), rep("text",5), rep("numeric",3), rep("text",2), "numeric")) 
 
 past.url <- "http://www.acleddata.com/wp-content/uploads/2015/06/ACLED-Version-5-All-Africa-1997-2014_dyadic_Updated_csv-no-notes.zip"
 past.file <- "ACLED-Version-5-All-Africa-1997-2014_dyadic_Updated_no_notes.csv"
@@ -41,8 +48,8 @@ getfile <- function(vector) {
 # Data fetching
 ACLED.targets <- list(c(past.url, past.file), c(realtime.url, realtime.file)) # Make list of target dataset info
 ACLED.list <- lapply(ACLED.targets, getfile) # Use function created above to ingest files into list form
-names(ACLED.list[[1]]) <- sub("GEO_PRECIS", "GEO_PRECISION", names(ACLED.list[[1]])) # Fix name of var in Version 5 to match realtime
-names(ACLED.list[[2]]) <- gsub("ADM_LEVEL_", "ADMIN", names(ACLED.list[[2]])) # Fix names of location vars to match Version 5
+names(ACLED.list[[1]]) <- sub("GEO_PRECIS", "GEO_PRECISION", names(ACLED.list[[1]])) # Change name of var in Version 5 to match realtime
+names(ACLED.list[[2]]) <- gsub("ADM_LEVEL_", "ADMIN", names(ACLED.list[[2]])) # Change names of location vars to match Version 5
 ACLED <- Reduce(function(...) merge(..., all=TRUE), ACLED.list) # Merge all files in the list, keeping all non-duplicate rows
 names(ACLED) <- tolower(names(ACLED)) # Convert var names in merged file to lower case
 
