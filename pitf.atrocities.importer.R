@@ -6,6 +6,10 @@
 # change. If the structure of the website changes, however, the script will fail, because it will be looking for the urls in
 # the wrong places.
 
+# The script creates two data frames:
+#    1. WAED: an event file containing all WAED events from 1 January 1995 through the latest update (usually 2-3 months ago)
+#    2. WAED.cm: a country-month file with counts of incidents, people killed, and people injured in them 
+
 # NOTE: This script will write the .zip archives and the files extracted from them (~20MB total) to your working directory.
 # SO far, I haven't been able to figure out how to code a version that doesn't.
 
