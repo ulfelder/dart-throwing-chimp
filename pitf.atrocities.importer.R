@@ -61,9 +61,13 @@ names(WAED) <- tolower(names(WAED))
 # fix some errant country names spotted with unique(WAED$country)
 WAED$country[WAED$country=="IRQ "] <- "IRQ"
 WAED$country[WAED$country=="SYR "] <- "SYR"
+WAED$country[WAED$country=="THL"] <- "THA" 
+WAED$country[WAED$country=="SUD"] <- "SDN"
+WAED$country[WAED$country=="TMP"] <- "TLS"
 WAED$country[WAED$country=="Somalia" | WAED$country=="SOM "] <- "SOM"
-WAED$country[WAED$country=="Nigeria"] <- "NGA"
+WAED$country[WAED$country=="Nigeria" | WAED$country[WAED$country=="NGR"] <- "NGA"
 WAED$country[WAED$country=="South Sudan" | WAED$country=="South Sudan "] <- "SSD"
+# NOTE: SCG (Serbia and Montenegro before 2006) and GZS (Gaza Strip) are valid codes that 'countrycode' does not recognize
 
 # Change type of selected variables to numeric
 WAED <- WAED %>%
