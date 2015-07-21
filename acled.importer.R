@@ -39,25 +39,29 @@ url <- "http://www.acleddata.com/data/"  # url for acled's data page
 version <- 5  # current version of historical data
 endyear <- 2014  # end year for current version of historical data
 
-realtime.url <- paste0(url, "realtime-data-2015/") %>%  # scrape link address for realtime .zip
+# scrape link address for realtime .zip
+realtime.url <- paste0(url, "realtime-data-2015/") %>%  # cobble together url of target page
   html(.) %>%               # parse the relevant page
   html_nodes("a") %>%       # find all the hyperlinks
   html_attr("href") %>%     # get the urls for those hyperlinks
   str_subset("\\.zip") %>%  # find the urls that end in ".zip"
   str_subset("ACLED-All-Africa-File_20150101") # pick the one we want, which runs from the start of the year
-realtime.file <- realtime.url %>%  # build name of realtime file to extract from realtime .zip
+# build name of realtime file to extract from realtime .zip
+realtime.file <- realtime.url %>% 
   str_split(., "\\/") %>%   # split the url at the forward slashes
   unlist(.) %>%             # unlist the result
   .[length(.)] %>%          # take the last item on that list, the file name
   sub("zip", "csv", .) %>%  # change suffix from zip to csv
   gsub("-", " ", .)         # replace hyphens with blank space
 
-past.url <- paste0(url, sprintf("version-%d-data-1997-%d/", version, endyear)) %>%  # scrape link address for past data
+# scrape link address for past data
+past.url <- paste0(url, sprintf("version-%d-data-1997-%d/", version, endyear)) %>% # cobble together url of target page
   html(.) %>%               # parse the relevant page
   html_nodes("a") %>%       # find all the hyperlinks
   html_attr("href") %>%     # get the urls for those hyperlinks
   str_subset("\\.zip") %>%  # find the urls that end in ".zip"
   str_subset("dyadic_Updated") # pick the dyadic one that isn't a shapefile
+# build name of past file to extract from resulting .zip
 past.file <- sprintf("ACLED-Version-%d-All-Africa-1997-%d_dyadic_Updated_no_notes.csv", version, endyear)
 
 # Function to get zip file and extract csv using vector of two string objects and returning data frame
@@ -79,11 +83,10 @@ names(ACLED.list[[2]]) <- gsub("ADM_LEVEL_", "ADMIN", names(ACLED.list[[2]])) # 
 ACLED <- Reduce(function(...) merge(..., all=TRUE), ACLED.list) # Merge all files in the list, keeping all non-duplicate rows
 names(ACLED) <- tolower(names(ACLED)) # Convert var names in merged file to lower case
 
-# It's a good idea to inspect the result to make sure it's worked as expected
-# str(ACLED)
+# Create country-month summary data frames
 
-# Get country-month counts of each event type and add column counting all battles of any type
-ACLED.cm <- ACLED %>%
+# Counts of events by type
+ACLED.cm.types <- ACLED %>%
   mutate(event_type = make.names(tolower(event_type))) %>% # Change event type labels for use as proper var names, and to deal with "Remote Violence", "Remote violence"
   mutate(month = as.numeric(substr(event_date, 4, 5))) %>%  # Create month var to use in grouping
   group_by(gwno, year, month, event_type) %>%  # Define groupings from highest to lowest level; data are automatically ordered accordingly
@@ -91,12 +94,23 @@ ACLED.cm <- ACLED %>%
   spread(., key = event_type, value = n, fill = 0) %>% # Make data wide by spreading event types into columns
   left_join(expand(., gwno, year, month), .) %>% # Expand data frame to cover all possible country-months by left-joining tallies to complete series created with expand() from tidyr
   replace(is.na(.), 0) %>%  # Replace all NAs created by that last step with 0s
-  mutate(., battles = rowSums(select(., contains("battle")))) %>% # Create var summing counts of all battle types
+  mutate(., battles = rowSums(select(., contains("battle")))) %>% # Create vars summing counts of all battle types
   filter(., year < as.numeric(substr(Sys.Date(), 1, 4)) | (year == as.numeric(substr(Sys.Date(), 1, 4)) & month < as.numeric(substr(Sys.Date(), 6, 7)))) %>% # Drop rows for months that haven't happened yet
   mutate(., country = countrycode(gwno, "cown", "country.name", warn = FALSE)) # Use 'countrycode' to add country names based on COW numeric codes
-  
+
+# Death counts
+ACLED.cm.deaths <- ACLED %>%
+  mutate(month = as.numeric(substr(event_date, 4, 5))) %>%  # Create month var to use in grouping
+  group_by(gwno, year, month) %>%  # Define groupings from highest to lowest level; data are automatically ordered accordingly
+  summarise(., deaths = sum(fatalities, na.rm=TRUE)) %>%  # get monthly death counts
+  left_join(expand(., gwno, year, month), .) %>% # Expand data frame to cover all possible country-months by left-joining sums to complete series created with expand() from tidyr
+  replace(is.na(.), 0) %>%  # Replace all NAs created by that last step with 0s
+  filter(., year < as.numeric(substr(Sys.Date(), 1, 4)) | (year == as.numeric(substr(Sys.Date(), 1, 4)) & month < as.numeric(substr(Sys.Date(), 6, 7)))) %>% # Drop rows for months that haven't happened yet
+  mutate(., country = countrycode(gwno, "cown", "country.name", warn = FALSE)) # Use 'countrycode' to add country names based on COW numeric codes
+
 # Again, inspecting the results is a good idea
-# str(ACLED.cm)
+# str(ACLED.cm.types)
+# str(ACLED.cm.deaths)
 
 # You can also do this with plots...
 
