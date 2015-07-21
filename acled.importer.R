@@ -6,12 +6,15 @@
 # name of the .csv files they contain. As such, it should keep working throughout 2015, as long as ACLED does not change
 # the layout or structure of their web site or the conventions by which they name those files. It will almost certainly need
 # to be updated in early 2016 when the URL for ACLED's Realtime page changes and then again when the next annual update of
-# the historical data is completed and posted.
+# the historical data is completed and posted. If any of those things do change, the script will fail at the "Data fetching"
+# step, if not sooner. If that happens, you should be able to work around the problem by hard-coding the past.url, past.file,
+# realtime.url, and realtime.file objects according to the steps given in the comments at the bottom of the script and then
+# re-running the script starting at the "Data fetching" step.
 
-# If any of those things do change, the script will fail at the "Data fetching" step, if not sooner. If that happens, you
-# should be able to work around the problem by hard-coding the past.url, past.file, realtime.url, and realtime.file objects
-# according to the steps given in the comments at the bottom of the script and then re-running the script starting at
-# the "Data fetching" step.
+# This script creates three data sets in the R environment:
+#    1. ACLED: an event file containing all records through the most recent posted update, usually last Monday
+#    2. ACLED.cm.types: a country-month data frame with counts of events by type and one for all battles of any type
+#    3. ACLED.cm.deaths: a country-month data frame with counts of deaths from all event types
 
 # Also note that the csv of the historical data does not include the Notes field because special characters in those fields
 # make it difficult to read cleanly. If you want to see the notes, you need to download the .xslx version, which includes
