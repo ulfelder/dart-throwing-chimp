@@ -22,8 +22,9 @@
 #  rep("numeric",2), rep("text",5), rep("numeric",3), rep("text",2), "numeric")) 
 
 # Load required packages
-library(lubridate)
+
 library(rvest)
+library(stringr)
 library(dplyr)
 library(tidyr)
 library(countrycode)
@@ -33,21 +34,34 @@ library(ggplot2)
 # Unfortunately, the name of the .csv file in that zip archive is not a direct derivation of the link address, so I am leaving
 # that part hard-coded for now. That means it should work for the rest of 2015, as long as ACLED doesn't rearrange or rename
 # the page, but the script will need to be updated in 2016. This block and the one that follow depend on 'rvest'.
-past.page <- "http://www.acleddata.com/data/version-5-data-1997-2014/"
-past.html <- html(past.page)
-past.link <- html_node(past.html, xpath = "/html/body/div/div/div/div/div/article/div/p[4]/a[2]")
-past.url <- html_attr(past.link, "href")
-past.file <- "ACLED-Version-5-All-Africa-1997-2014_dyadic_Updated_no_notes.csv"
 
-# This gets link address for latest zipped realtime csv from the ACLED website and parses it to guess at the name of the
-# .csv file inside.
-realtime.page <- "http://www.acleddata.com/data/realtime-data-2015/"
-realtime.html <- html(realtime.page)
-realtime.link <- html_node(realtime.html, xpath = "/html/body/div/div/div/div[1]/div/article/div/ul[1]/li[2]/a")
-realtime.url <- html_attr(realtime.link, "href")
-realtime.file <- gsub("-", " ", sub("zip", "csv", substr(realtime.url, 53, nchar(realtime.url))))
+url <- "http://www.acleddata.com/data/"  # url for acled's data page
+version <- 5  # current version of historical data
+endyear <- 2014  # end year for current version of historical data
+
+realtime.url <- paste0(url, "realtime-data-2015/") %>%  # scrape link address for realtime .zip
+  html(.) %>%               # parse the relevant page
+  html_nodes("a") %>%       # find all the hyperlinks
+  html_attr("href") %>%     # get the urls for those hyperlinks
+  str_subset("\\.zip") %>%  # find the urls that end in ".zip"
+  str_subset("ACLED-All-Africa-File_20150101") # pick the one we want, which runs from the start of the year
+realtime.file <- realtime.url %>%  # build name of realtime file to extract from realtime .zip
+  str_split(., "\\/") %>%   # split the url at the forward slashes
+  unlist(.) %>%             # unlist the result
+  .[length(.)] %>%          # take the last item on that list, the file name
+  sub("zip", "csv", .) %>%  # change suffix from zip to csv
+  gsub("-", " ", .)         # replace hyphens with blank space
+
+past.url <- paste0(url, sprintf("version-%d-data-1997-%d/", version, endyear)) %>%  # scrape link address for past data
+  html(.) %>%               # parse the relevant page
+  html_nodes("a") %>%       # find all the hyperlinks
+  html_attr("href") %>%     # get the urls for those hyperlinks
+  str_subset("\\.zip") %>%  # find the urls that end in ".zip"
+  str_subset("dyadic_Updated") # pick the dyadic one that isn't a shapefile
+past.file <- sprintf("ACLED-Version-%d-All-Africa-1997-%d_dyadic_Updated_no_notes.csv", version, endyear)
 
 # Function to get zip file and extract csv using vector of two string objects and returning data frame
+
 getfile <- function(vector) {
   temp <- tempfile()
   download.file(vector[1], temp)
@@ -56,7 +70,8 @@ getfile <- function(vector) {
   return(df)
 }
 
-# Data fetching
+# Fetch and merge the past and current-year files
+
 ACLED.targets <- list(c(past.url, past.file), c(realtime.url, realtime.file)) # Make list of target dataset info
 ACLED.list <- lapply(ACLED.targets, getfile) # Use function created above to ingest files into list form
 names(ACLED.list[[1]]) <- sub("GEO_PRECIS", "GEO_PRECISION", names(ACLED.list[[1]])) # Change name of var in Version 5 to match realtime
@@ -64,8 +79,8 @@ names(ACLED.list[[2]]) <- gsub("ADM_LEVEL_", "ADMIN", names(ACLED.list[[2]])) # 
 ACLED <- Reduce(function(...) merge(..., all=TRUE), ACLED.list) # Merge all files in the list, keeping all non-duplicate rows
 names(ACLED) <- tolower(names(ACLED)) # Convert var names in merged file to lower case
 
-# Inspect the result to make sure it's worked as expected
-str(ACLED)
+# It's a good idea to inspect the result to make sure it's worked as expected
+# str(ACLED)
 
 # Get country-month counts of each event type and add column counting all battles of any type
 ACLED.cm <- ACLED %>%
@@ -80,7 +95,10 @@ ACLED.cm <- ACLED %>%
   filter(., year < as.numeric(substr(Sys.Date(), 1, 4)) | (year == as.numeric(substr(Sys.Date(), 1, 4)) & month < as.numeric(substr(Sys.Date(), 6, 7)))) %>% # Drop rows for months that haven't happened yet
   mutate(., country = countrycode(gwno, "cown", "country.name", warn = FALSE)) # Use 'countrycode' to add country names based on COW numeric codes
   
-# NOT RUN: Some examples of time-series plots
+# Again, inspecting the results is a good idea
+# str(ACLED.cm)
+
+# You can also do this with plots...
 
 # Montly counts of events involving violence against civilians in Burundi
 # ACLED.cm %>%
@@ -97,7 +115,9 @@ ACLED.cm <- ACLED %>%
 # If you'd rather save that plot to your hard drive, replace the 'print %>%' line with one like this:
 # ggsave("ACLED.battles.ts.png", path = "[path to directory in which to save it]", width = 6, height = 8, units="in")
 
-# To hard-code the link addresses and file names used in the "Data fetching" step, I did the following on a Windows PC:
+# If the URLs for ACLED's data site change, as they probably will each year, it may be necessary to hard-code the link
+# addresses and file names for the historical and realtime data downloads before the "Data fetching" step. Here's how
+# I did that on a Windows PC:
 # 1. Pointed my browser to the ACLED home page: http://www.acleddata.com/
 # 2. Clicked on the Data tab, which took me to: http://www.acleddata.com/data/
 # 3. Clicked on "ACLED Version 5 (1997-2014)" under Africa Data, which took me to: http://www.acleddata.com/data/version-5-data-1997-2014/
