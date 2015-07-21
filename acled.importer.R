@@ -33,6 +33,16 @@ library(tidyr)
 library(countrycode)
 library(ggplot2)
 
+# Create function to get zip file and extract csv using vector of two string objects and returning data frame
+
+getfile <- function(vector) {
+  temp <- tempfile()
+  download.file(vector[1], temp)
+  df <- read.csv(unz(temp, vector[2]), stringsAsFactors=FALSE)
+  unlink(temp)
+  return(df)
+}
+
 # This block of code pulls the link address for the historical data from the ACLED web site and directs the download there.
 # Unfortunately, the name of the .csv file in that zip archive is not a direct derivation of the link address, so I am leaving
 # that part hard-coded for now. That means it should work for the rest of 2015, as long as ACLED doesn't rearrange or rename
@@ -67,16 +77,6 @@ past.url <- paste0(url, sprintf("version-%d-data-1997-%d/", version, endyear)) %
 # build name of past file to extract from resulting .zip
 past.file <- sprintf("ACLED-Version-%d-All-Africa-1997-%d_dyadic_Updated_no_notes.csv", version, endyear)
 
-# Function to get zip file and extract csv using vector of two string objects and returning data frame
-
-getfile <- function(vector) {
-  temp <- tempfile()
-  download.file(vector[1], temp)
-  df <- read.csv(unz(temp, vector[2]), stringsAsFactors=FALSE)
-  unlink(temp)
-  return(df)
-}
-
 # Fetch and merge the past and current-year files
 
 ACLED.targets <- list(c(past.url, past.file), c(realtime.url, realtime.file)) # Make list of target dataset info
@@ -110,6 +110,9 @@ ACLED.cm.deaths <- ACLED %>%
   replace(is.na(.), 0) %>%  # Replace all NAs created by that last step with 0s
   filter(., year < as.numeric(substr(Sys.Date(), 1, 4)) | (year == as.numeric(substr(Sys.Date(), 1, 4)) & month < as.numeric(substr(Sys.Date(), 6, 7)))) %>% # Drop rows for months that haven't happened yet
   mutate(., country = countrycode(gwno, "cown", "country.name", warn = FALSE)) # Use 'countrycode' to add country names based on COW numeric codes
+
+# Remove interim objects from workspace
+rm(ACLED.list, ACLED.targets, endyear, getfile, past.file, past.url, realtime.file, realtime.url, url, version)
 
 # Again, inspecting the results is a good idea
 # str(ACLED.cm.types)
