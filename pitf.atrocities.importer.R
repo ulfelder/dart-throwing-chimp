@@ -82,9 +82,7 @@ WAED.cm <- WAED %>%
   summarise(., incidents = n(), dead = sum(deaths.number, na.rm=TRUE), injured = sum(injured.number, na.rm=TRUE)) %>%  # create new df of event and casualty counts
   left_join(expand(., iso3c, year, month), .) %>% # Expand data frame to cover all country-months by left-joining tallies to complete series created with expand() from tidyr
   replace(is.na(.), 0) %>%  # Replace NAs created in last step with 0s
-  filter(., year < as.numeric(substr(enddate, 1, 4)) | (year == as.numeric(substr(enddate, 1, 4)) & month <= as.numeric(substr(enddate, 5, 6)))) %>% # Drop rows for 
-
-months that haven't happened yet
+  filter(., year < as.numeric(substr(enddate, 1, 4)) | (year == as.numeric(substr(enddate, 1, 4)) & month <= as.numeric(substr(enddate, 5, 6)))) %>% # Drop rows for months that haven't happened yet
   mutate(., country = countrycode(iso3c, "iso3c", "country.name", warn = FALSE)) # Use 'countrycode' to add country names based on COW numeric codes 
   
 # Clean up the workspace
