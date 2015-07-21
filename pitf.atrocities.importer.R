@@ -1,12 +1,13 @@
-# This script can be used to automatically ingest and summarize PITF WorldWide Atrocities Event Data. It is designed to detect the relevant
-# urls from the PITF WAED website, parse the relevant file names from those urls, download the zip files to the working directory, extract the
-# desired Excel files from those zip archives to the working directory, read those Excel files into R, merge them, clean up some country
-# names, and summarize the data into some common cross-tabulations. If it works properly---and so far it does---the script should continue
-# working even as the PITF WAED files are updated and their names change. If the structure of the website changes, however, the script will
-# fail, because it will be looking for the urls in the wrong places.
+# This script can be used to automatically ingest and summarize PITF WorldWide Atrocities Event Data. It is designed to detect
+# the relevant urls from the PITF WAED website, parse the relevant file names from those urls, download the zip files to the
+# working directory, extract the desired Excel files from those zip archives to the working directory, read those Excel files
+# into R, merge them, clean up some country names, and summarize the data into some common cross-tabulations. If it works
+# properly---and so far it does---the script should continue working even as the PITF WAED files are updated and their names
+# change. If the structure of the website changes, however, the script will fail, because it will be looking for the urls in
+# the wrong places.
 
-# NOTE: This script will write the .zip archives and the files extracted from them (~20MB total) to your working directory. So far, I haven't
-# been able to figure out how to code a version that doesn't.
+# NOTE: This script will write the .zip archives and the files extracted from them (~20MB total) to your working directory.
+# SO far, I haven't been able to figure out how to code a version that doesn't.
 
 # Load required packages
 
@@ -18,8 +19,8 @@ library(tidyr)
 library(stringr)
 library(countrycode)
 
-# Get urls and file names target files from PITF WAED website
-# This helped: http://gastonsanchez.com/work/webdata/getting_web_data_r4_parsing_xml_html.pdf
+# Get urls and file names target files from PITF WAED website. This is clunkier and more fragile than the approach I used in
+# the ACLED ingester, but that code didn't work on this website (Error 406), and this is what I got to work instead.
 
 waed.page <- "http://eventdata.parusanalytics.com/data.dir/atrocities.html"
 
