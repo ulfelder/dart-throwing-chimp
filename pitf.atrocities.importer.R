@@ -1,7 +1,7 @@
 # This script can be used to automatically ingest and summarize PITF WorldWide Atrocities Event Data. It is designed to detect
-# the relevant urls from the PITF WAED website, parse the relevant file names from those urls, download the zip files to the
-# working directory, extract the desired Excel files from those zip archives to the working directory, read those Excel files
-# into R, merge them, clean up some country names, and summarize the data into some common cross-tabulations. If it works
+# the relevant urls from the PITF WAED website, parse the relevant file names from those urls, download the zip files to
+# temporary files, extract the desired Excel files from those zip archives into other temporary files, read those Excel files
+# into R, merge them, clean up some data glitches, and summarize the data into some common cross-tabulations. If it works
 # properly---and so far it does---the script should continue working even as the PITF WAED files are updated and their names
 # change. If the structure of the website changes, however, the script will fail, because it will be looking for the urls in
 # the wrong places.
@@ -10,18 +10,16 @@
 #    1. WAED: an event file containing all WAED events from 1 January 1995 through the latest update (usually 2-3 months ago)
 #    2. WAED.cm: a country-month file with counts of incidents, people killed, and people injured in them 
 
-# NOTE: This script will write the .zip archives and the files extracted from them (~20MB total) to your working directory.
-# SO far, I haven't been able to figure out how to code a version that doesn't.
-
 # Load required packages
 
 library(XML)
 library(XLConnect)
-library(downloader)
 library(dplyr)
 library(tidyr)
 library(stringr)
 library(countrycode)
+
+# SCRAPE
 
 # Get urls and file names target files from PITF WAED website. This is clunkier and more fragile than the approach I used in
 # the ACLED ingester, but that code didn't work on this website (Error 406), and this is what I got to work instead.
@@ -29,10 +27,12 @@ library(countrycode)
 waed.page <- "http://eventdata.parusanalytics.com/data.dir/atrocities.html"
 
 waed.child <- waed.page %>%
-  htmlTreeParse(.) %>%
-  xmlRoot(.) %>%
-  xmlChildren(.)
+  htmlTreeParse(.) %>% # Parse the target page html into a tree structure
+  xmlRoot(.) %>% # Get a list of the roots
+  xmlChildren(.) # Get a list of the children of those roots
 
+# Pull the desired text from the right node in the right child --- found by eyeballing waed.child[[2]] --- and paste it
+# into a string with the rest of the url
 waed.new.link <- paste0("http://eventdata.parusanalytics.com/data.dir/", unlist(getNodeSet(waed.child[[2]], "/body/div/div/div/p[7]/a[1]"))["attributes.href"])
 waed.new.file <- sub(".zip", "", unlist(getNodeSet(waed.child[[2]], "/body/div/div/div/p[7]/a[1]"))["attributes.href"])
 
@@ -40,20 +40,26 @@ waed.old.link <- paste0("http://eventdata.parusanalytics.com/data.dir/", unlist(
 waed.old.file <- sub(".zip", "", unlist(getNodeSet(waed.child[[2]], "/body/div/div/div/p[6]/a[1]"))["attributes.href"])
 
 # Now download those target archives, extract desired Excel files, and import results
-# See: http://stackoverflow.com/questions/3053833/using-r-to-download-zipped-data-file-extract-and-import-data
+# See: http://stackoverflow.com/questions/31589170/download-unzip-and-load-excel-file-in-r-using-tempfiles-only
 
-download(waed.old.link, dest="dataset.zip", mode="wb")
-unzip("dataset.zip", files = waed.old.file)
+# First, the historical data
+tmp <- tempfile() # Create tempfile connection
+download.file(waed.old.link, tmp) # Download the .zip file to that connection
+tmp2 <- tempfile() # Create another connection
+tmp2 <- unzip(zipfile=tmp, files = waed.old.file, exdir=tempdir()) # Unzip the specified file from the download to that slot
+WAED.old <- readWorksheetFromFile(tmp2, sheet = 1, startRow = 3, startCol = 1, endCol = 73) # Deals w/odd formatting in Excel
 
-download(waed.new.link, dest="dataset.2.zip", mode="wb")
-unzip("dataset.2.zip", files = waed.new.file)
+# Then repeat with the latest version of the newer stuff
+tmp3 <- tempfile()
+download.file(waed.new.link, tmp3)
+tmp4 <- tempfile()
+tmp4 <- unzip(zipfile=tmp3, files = waed.new.file, exdir=tempdir())
+WAED.new <- readWorksheetFromFile(tmp4, sheet = 1, startRow = 3, startCol = 1, endCol = 73)
 
-# Now ingest, merge, and clean the data tables
+# Merge the two files, keeping all rows from both
+WAED <- merge(WAED.old, WAED.new, all = TRUE)
 
-# Import, accounting for idiosynracies of these sheets, and merge in one go
-WAED <- merge(readWorksheetFromFile(waed.old.file, sheet = 1, startRow = 3, startCol = 1, endCol = 73),
-  readWorksheetFromFile(waed.new.file, sheet = 1, startRow = 3, startCol = 1, endCol = 73),
-  all=TRUE)
+# CLEANING
 
 # I don't like capitalized variable names
 names(WAED) <- tolower(names(WAED))
@@ -65,7 +71,7 @@ WAED$country[WAED$country=="THL"] <- "THA"
 WAED$country[WAED$country=="SUD"] <- "SDN"
 WAED$country[WAED$country=="TMP"] <- "TLS"
 WAED$country[WAED$country=="Somalia" | WAED$country=="SOM "] <- "SOM"
-WAED$country[WAED$country=="Nigeria" | WAED$country[WAED$country=="NGR"] <- "NGA"
+WAED$country[WAED$country=="Nigeria" | WAED$country=="NGR"] <- "NGA"
 WAED$country[WAED$country=="South Sudan" | WAED$country=="South Sudan "] <- "SSD"
 # NOTE: SCG (Serbia and Montenegro before 2006) and GZS (Gaza Strip) are valid codes that 'countrycode' does not recognize
 
@@ -96,3 +102,7 @@ WAED.cm <- WAED %>%
   
 # Clean up the workspace
 rm(enddate, waed.child, waed.new.file, waed.new.link, waed.old.file, waed.old.link, waed.page)
+unlink(tmp)
+unlink(tmp2)
+unlink(tmp3)
+unlink(tmp4)
