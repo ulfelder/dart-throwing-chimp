@@ -101,7 +101,6 @@ WAED.cm <- WAED %>%
   mutate(., country = countrycode(iso3c, "iso3c", "country.name", warn = FALSE)) # Use 'countrycode' to add country names based on COW numeric codes 
   
 # Clean up the workspace
-rm(enddate, waed.child, waed.new.file, waed.new.link, waed.old.file, waed.old.link, waed.page)
 unlink(tmp)
 unlink(tmp2)
 unlink(tmp3)
