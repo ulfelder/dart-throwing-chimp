@@ -99,6 +99,7 @@ WAED.cm <- WAED %>%
   replace(is.na(.), 0) %>%  # Replace NAs created in last step with 0s
   filter(., year < as.numeric(substr(enddate, 1, 4)) | (year == as.numeric(substr(enddate, 1, 4)) & month <= as.numeric(substr(enddate, 5, 6)))) %>% # Drop rows for months that haven't happened yet
   mutate(., yearmo = as.Date(paste(year, ifelse(month < 10, paste0("0", month), month), "01", sep="-"))) %>%
+  filter(., is.na(yearmo)==FALSE) %>% # drop rows with missing yearmo because of missing start month in WAED
   mutate(., country = countrycode(iso3c, "iso3c", "country.name", warn = FALSE)) # Use 'countrycode' to add country names based on COW numeric codes 
   
 # Clean up the workspace
