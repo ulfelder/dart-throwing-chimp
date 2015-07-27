@@ -86,6 +86,16 @@ WAED <- WAED %>%
   mutate_each(funs(as.numeric), contains("distance")) %>%
   mutate_each(funs(as.numeric), contains("number"))
 
+# Create decimal-degree lat and lon and a collapsed date column in event file version
+WAED <- WAED %>%
+    mutate(lat = (degrees + minutes/60 + seconds/3600) * ifelse(direction=="South" | direction=="S", -1, 1),
+           lon = (degrees.1 + minutes.1/60 + seconds.1/3600) * ifelse(direction.1=="West" | direction=="W", -1, 1)) %>%
+    mutate(date = as.Date(paste(start.year,
+                                ifelse(start.month < 10, paste0("0", start.month), start.month),
+                                ifelse(start.day < 10, paste0("0", start.day), start.day),
+                                sep="-"),
+                          format="%Y-%m-%d"))
+
 # Country-month summation on incidents only
 
 enddate <- str_extract_all(waed.new.file, "[:digit:]+", simplify=TRUE)[,2]  # End date of last update; needed for filtering to come
