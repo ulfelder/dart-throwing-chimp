@@ -61,11 +61,11 @@ realtime.url <- paste0(url, "realtime-data-2015/") %>%  # cobble together url of
   str_subset("ACLED-All-Africa-File_20150101") # pick the one we want, which runs from the start of the year
 # build name of realtime file to extract from realtime .zip
 realtime.file <- realtime.url %>% 
-  str_split(., "\\/") %>%   # split the url at the forward slashes
-  unlist(.) %>%             # unlist the result
-  .[length(.)] %>%          # take the last item on that list, the file name
-  sub("zip", "csv", .) %>%  # change suffix from zip to csv
-  gsub("-", " ", .)         # replace hyphens with blank space
+  str_split(., "\\/") %>%         # split the url at the forward slashes
+  unlist(.) %>%                   # unlist the result
+  .[length(.)] %>%                # take the last item on that list, the file name
+  sub("_csv.zip", ".csv", .) %>%  # change suffix from _csv.zip to .csv
+  gsub("-", " ", .)               # replace hyphens with blank space
 
 # scrape link address for past data
 past.url <- paste0(url, sprintf("version-%d-data-1997-%d/", version, endyear)) %>% # cobble together url of target page
