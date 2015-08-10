@@ -5,9 +5,9 @@
 
 # The function will flexibly handle three kinds of linear models --- 1) generalized additive models (gams) with
 # smoothing splines, 2) multilevel models with at least one random effect, and 3) plain old linear regression ---
-# by inferring the model type from the user-given model formula. It defaults to ordinary linear regression; it uses
-# gam() when the formula includes at least one term with "s()", and it uses lmer() when the formula includes at least
-# one term with " | " in it.
+# by inferring the model type from the user-given model formula. The function: uses gam() when the formula includes
+# at least one term with " s(" or " lo(" in it; uses lmer() when the formula includes at least one term with " | " in it;
+# and it uses lm() if neither of those conditions holds.
 
 # The call to cv.for.lms() takes:
 #
@@ -54,7 +54,7 @@ cv.for.lms <- function(formulalist, df, k, iterations, userseed) {
 
         # Infer model type from the model formula and apply the inferred type
 
-        if (sum(grepl("s\\(", formula)) > 0) {
+        if (sum(grepl(" s\\(", formula)) > 0 | sum(grepl(" lo\\(", formula)) > 0) {
 
             modobj <- gam(formula, data = train, na.action = na.exclude)
 
