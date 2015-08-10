@@ -26,6 +26,14 @@
 #    cross-validation.
 #
 # The function depends on the following packages: caret, gam, lme4, verification
+#
+# This example works:
+#
+# formulalist = list(mod.lm = as.formula(Petal.Width ~ Petal.Length),
+#                    mod.gam = as.formula(Petal.Width ~ Petal.Length + s(Sepal.Width)),
+#                    mod.lme = as.formula(Petal.Width ~ Petal.Length + (1 | Species)))
+#
+# cv.for.lms(formulalist, iris, 5, 10, 20912)
 
 cv.for.lms <- function(formulalist, df, k, iterations, userseed) {
 
