@@ -24,11 +24,15 @@
 #
 # 5. An integer (userseed) to be used to set the seed for sampling in the splitting of the original dataframe for
 #    cross-validation.
+#
+# The function depends on the following packages: caret, gam, lme4, verification
 
 cv.for.lms <- function(formulalist, df, k, iterations, userseed) {
 
+    require(caret)
     require(gam)
     require(lme4)
+    require(verification)
 
     # This function calculates accuracy statistics for a single fold of a single iteration of iterated k-fold cv. It is
     # meant to be used in a call to lapply() on an integer sequence running from 1 to k * iterations.
