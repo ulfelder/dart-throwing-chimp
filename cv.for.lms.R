@@ -7,7 +7,7 @@
 # smoothing splines, 2) multilevel models with at least one random effect, and 3) plain old linear regression ---
 # by inferring the model type from the user-given model formula. It defaults to ordinary linear regression; it uses
 # gam() when the formula includes at least one term with "s()", and it uses lmer() when the formula includes at least
-# one term with "(1 |".
+# one term with " | " in it.
 
 # The call to cv.for.lms() takes:
 #
@@ -58,7 +58,7 @@ cv.for.lms <- function(formulalist, df, k, iterations, userseed) {
 
             modobj <- gam(formula, data = train, na.action = na.exclude)
 
-        } else if (sum(grepl("\\(1 \\|", formula)) > 0) {
+        } else if (sum(grepl(" \\| ", formula)) > 0) {
 
             modobj <- lmer(formula, data = train)
 
