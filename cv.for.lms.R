@@ -1,7 +1,8 @@
 # This script creates a function, cv.for.lms(), that can be used to run iterated k-fold cross-validation on numerous
-# linear regression models in one shot. It produces a dataframe that contains averages of a few common measures of
-# accuracy for models with continuous dependent variables. Each model gets a single value for each accuracy measure, 
-# representing the average of the values for that model across all j iterations of k-fold cross-validation.
+# linear regression models with a common dependent variable/target in one shot. It produces a dataframe that contains
+# averages of a few common measures of accuracy for models with continuous dependent variables. Each model gets a
+# single value for each accuracy measure, representing the average of the values for that model across all j iterations
+# of k-fold cross-validation.
 
 # The function will flexibly handle three kinds of linear models --- 1) generalized additive models (gams) with
 # smoothing splines, 2) multilevel models with at least one random effect, and 3) plain old linear regression ---
@@ -41,14 +42,18 @@ cv.for.lms <- function(formulalist, df, k, iterations, userseed) {
     require(gam)
     require(lme4)
     require(verification)
+    
+    # Get partitions for iterated k-fold cross-validation
+
+    set.seed(userseed)  # set seed to make process replicable
+    dv <- all.vars(formulalist[[1]])[1] # recognize the dependent variable/target as first item in the first formula
+    cvfolds <- createMultiFolds(df[,dv], k = k, times = iterations) # create the sets for iterated k-fold cv
 
     # This function calculates accuracy statistics for a single fold of a single iteration of iterated k-fold cv. It is
     # meant to be used in a call to lapply() on an integer sequence running from 1 to k * iterations.
 
     cvmachine <- function(x, formula, df, k, iterations, userseed) {
-        set.seed(userseed)  # set seed so each run is using the same samples
-        dv <- all.vars(formula)[1] # recognize the dependent variable/target as first item in formula
-        cvfolds <- createMultiFolds(df[,dv], k = k, times = iterations) # create the sets for iterated k-fold cv
+
         train <- df[cvfolds[[x]],] # get the training set for the xth slice of that k * iterations stack
         test <- df[-cvfolds[[x]],] # get the associated test set, which is the complement of that training set
 
@@ -76,6 +81,7 @@ cv.for.lms <- function(formulalist, df, k, iterations, userseed) {
     }
 
     # This function takes the results of a lapplied call to cvmachine() and... 
+    
     summit <- function(cvstatslist) {
         z1 <- do.call(rbind, cvstatslist) # collapses them into a table;
         z2 <- cbind(rep = rep(seq(iterations), each = k), fold = rep(seq(k), times = iterations), z1) # adds iteration & fold id columns;
@@ -85,6 +91,8 @@ cv.for.lms <- function(formulalist, df, k, iterations, userseed) {
     }
 
     # Do all that crap in one shot and return the results
-    results <- do.call(rbind, lapply(formulalist, function(ls) summit(lapply(seq(k * iterations), function(x) cvmachine(x, ls, df, k, iterations, userseed)))))
+    
+    results <- do.call(rbind, lapply(formulalist, function(ls) summit(lapply(seq(k * iterations),
+        function(x) cvmachine(x, ls, df, k, iterations, userseed)))))
     return(results)
 }
