@@ -1,4 +1,4 @@
-# This script creates a function, cv.for.lms(), that can be used to run iterated k-fold cross-validation on numerous
+# This script creates a function, seevee.linear(), that can be used to run iterated k-fold cross-validation on numerous
 # linear regression models with a common dependent variable/target in one shot. It produces a dataframe that contains
 # averages of a few common measures of accuracy for models with continuous dependent variables. Each model gets a
 # single value for each accuracy measure, representing the average of the values for that model across all j iterations
@@ -34,9 +34,9 @@
 #                    mod.gam = as.formula(Petal.Width ~ Petal.Length + s(Sepal.Width)),
 #                    mod.lme = as.formula(Petal.Width ~ Petal.Length + (1 | Species)))
 #
-# cv.for.lms(formulalist, iris, 5, 10, 20912)
+# seevee.linear(formulalist, iris, 5, 10, 20912)
 
-cv.for.lms <- function(formulalist, df, k, iterations, userseed) {
+seevee.linear <- function(formulalist, df, k, iterations, userseed) {
 
     require(caret)
     require(gam)
