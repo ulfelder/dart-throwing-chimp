@@ -64,7 +64,7 @@ realtime.file <- realtime.url %>%
   str_split(., "\\/") %>%         # split the url at the forward slashes
   unlist(.) %>%                   # unlist the result
   .[length(.)] %>%                # take the last item on that list, the file name
-  sub("_csv.zip", ".csv", .) %>%  # change suffix from _csv.zip to .csv
+  sub(".zip", ".csv", .) %>%  # change suffix from _csv.zip to .csv
   gsub("-", " ", .)               # replace hyphens with blank space
 
 # scrape link address for past data
