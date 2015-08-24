@@ -1,6 +1,6 @@
 # Function to read Penn World Tables into R using version number only
 # For example, for Version 8.1, run fetchPWT(8.1)
-# Only tested on Windows machine.
+# Only tested on Windows machine with versio 8.1, in which data are on sheet 3.
 
 fetchPWT <- function(version) {
     require(readxl)
