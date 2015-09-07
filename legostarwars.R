@@ -2,6 +2,7 @@ library(dplyr)
 library(ggplot2)
 library(grid)
 library(gridExtra)
+library(reshape2)
 
 # Ingest Lego data
 Lego <- read.csv("https://raw.githubusercontent.com/seankross/lego/master/data-tidy/legosets.csv", stringsAsFactors=FALSE)
