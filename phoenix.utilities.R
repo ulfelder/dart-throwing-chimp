@@ -1,8 +1,10 @@
-# Functions to fetch and parse Phoenix event data daily files singly or in groups by date range. For example:
+# Functions to fetch, parse, and map Phoenix event data daily files singly or in groups by date range. For example:
 # X <- fetchPhoenix(Sys.Date() - 1)
 # X <- buildPhoenix("2015-09-01", Sys.Date() - 1)
 # X2 <- parsePhoenix(X, start="2015-09-03", country=c("GRC", "SYR"), issue="REFUGEES")
-# The only package required is 'downloader'
+# mapPhoenix(X2)
+# The only package required for the downloading and parsing functions is 'downloader'. The mapping function depends
+# on 'leaflet' and 'maps'.
 
 fetchPhoenix <- function(date) {
   require(downloader)
@@ -81,4 +83,16 @@ parsePhoenix <- function(data, start="1900-01-01", end=Sys.Date(),
 
   return(DF)
 
+}
+
+# quick-and-dirty interactive map of Phoenix events using 'leaflet' to render it in a browser, e.g.:
+# X <- parsePhoenix(buildPhoenix("2015-07-01", "2015-09-10"), country="TUR", rootcode=c(18,19))
+# mapPhoenix(X)
+mapPhoenix <- function(PhoenixData) {
+  require(maps)
+  require(leaflet)
+  lmap <- leaflet(PhoenixData)
+  lmap <- addTiles(lmap)
+  lmap <- addCircleMarkers(lmap, lng = X[,"ActionLong"], lat = X[,"ActionLat"], stroke=FALSE, popup = X[,"URLs"])
+  print(lmap)
 }
