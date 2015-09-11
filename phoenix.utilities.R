@@ -93,6 +93,8 @@ mapPhoenix <- function(PhoenixData) {
   require(leaflet)
   lmap <- leaflet(PhoenixData)
   lmap <- addTiles(lmap)
-  lmap <- addCircleMarkers(lmap, lng = X[,"ActionLong"], lat = X[,"ActionLat"], stroke=FALSE, popup = X[,"URLs"])
+  lmap <- addCircleMarkers(lmap, lng = PhoenixData[,"ActionLong"], lat = PhoenixData[,"ActionLat"],
+    popup = paste(PhoenixData[,"Date"], PhoenixData[,"SourceActorFull"], PhoenixData[,"TargetActorFull"], sep = " "),
+    stroke = FALSE)
   print(lmap)
 }
