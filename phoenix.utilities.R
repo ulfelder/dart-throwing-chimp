@@ -50,35 +50,35 @@ parsePhoenix <- function(data, start="1900-01-01", end=Sys.Date(),
   }
 
   # pick country or countries
-  if (country=="any") {
+  if ("any" %in% country) {
     DF <- DF
   } else {
     DF <- DF[DF[,"GeoStateName"] %in% country,]
   }
 
   # pick source actor role(s)
-  if (sourcerole=="any") {
+  if ("any" %in% sourcerole) {
     DF <- DF
   } else {
     DF <- DF[DF[,"SourceActorRole"] %in% sourcerole,]
   }
 
   # pick target actor role(s)
-  if (targetrole=="any") {
+  if ("any" %in% targetrole) {
     DF <- DF
   } else {
     DF <- DF[DF[,"TargetActorRole"] %in% targetrole,]
   }
 
   # pick event category or categories
-  if (rootcode=="any") {
+  if ("any" %in% rootcode) {
     DF <- DF
   } else {
     DF <- DF[DF[,"EventRootCode"] %in% rootcode,]
   }
 
   # pick event type(s)
-  if (eventcode=="any") {
+  if ("any" %in% eventcode) {
     DF <- DF
   } else {
     DF <- DF[DF[,"EventCode"] %in% eventcode,]
@@ -87,7 +87,7 @@ parsePhoenix <- function(data, start="1900-01-01", end=Sys.Date(),
   # pick issue(s)
   List <- strsplit(gsub(";", ",", DF$Issues), split=",")
   Index <- sapply(1:nrow(DF), function(x) as.logical(issue %in% List[[x]]))
-  if (issue=="any") {
+  if ("any" %in% issue) {
     DF <- DF
   } else {
     DF <- DF[which(Index),]
