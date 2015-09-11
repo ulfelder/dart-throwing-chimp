@@ -38,58 +38,42 @@ parsePhoenix <- function(data, start="1900-01-01", end=Sys.Date(),
   DF$Date2 = as.Date(DF$Date2)
 
   # filter by date range
-  if (start=="1900-01-01") {
-    DF <- DF
-  } else {
+  if (start!="1900-01-01") {
     DF <- DF[which(DF[,"Date2"] >= as.Date(start)),]
   }
-  if (end==Sys.Date()) {
-    DF <- DF
-  } else {
+  if (end!=Sys.Date()) {
     DF <- DF[which(DF[,"Date2"] <= as.Date(end)),]
   }
 
   # pick country or countries
-  if ("any" %in% country) {
-    DF <- DF
-  } else {
+  if (("any" %in% country)==FALSE) {
     DF <- DF[DF[,"GeoStateName"] %in% country,]
   }
 
   # pick source actor role(s)
-  if ("any" %in% sourcerole) {
-    DF <- DF
-  } else {
+  if (("any" %in% sourcerole)==FALSE) {
     DF <- DF[DF[,"SourceActorRole"] %in% sourcerole,]
   }
 
   # pick target actor role(s)
-  if ("any" %in% targetrole) {
-    DF <- DF
-  } else {
+  if (("any" %in% targetrole)==FALSE) {
     DF <- DF[DF[,"TargetActorRole"] %in% targetrole,]
   }
 
   # pick event category or categories
-  if ("any" %in% rootcode) {
-    DF <- DF
-  } else {
+  if (("any" %in% rootcode)==FALSE) {
     DF <- DF[DF[,"EventRootCode"] %in% rootcode,]
   }
 
   # pick event type(s)
-  if ("any" %in% eventcode) {
-    DF <- DF
-  } else {
+  if (("any" %in% eventcode)==FALSE) {
     DF <- DF[DF[,"EventCode"] %in% eventcode,]
   }
 
   # pick issue(s)
   List <- strsplit(gsub(";", ",", DF$Issues), split=",")
   Index <- sapply(1:nrow(DF), function(x) as.logical(issue %in% List[[x]]))
-  if ("any" %in% issue) {
-    DF <- DF
-  } else {
+  if (("any" %in% issue)==FALSE) {
     DF <- DF[which(Index),]
   }
 
