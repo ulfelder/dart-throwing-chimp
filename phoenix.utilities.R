@@ -91,6 +91,7 @@ parsePhoenix <- function(data, start="1900-01-01", end=Sys.Date(),
 mapPhoenix <- function(PhoenixData) {
   require(maps)
   require(leaflet)
+  PhoenixData <- PhoenixData[is.na(PhoenixData[,"ActionLat"])==FALSE,] # drop rows with no geocoordinates
   lmap <- leaflet(PhoenixData)
   lmap <- addTiles(lmap)
   lmap <- addCircleMarkers(lmap, lng = PhoenixData[,"ActionLong"], lat = PhoenixData[,"ActionLat"],
