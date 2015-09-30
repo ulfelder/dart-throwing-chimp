@@ -12,8 +12,9 @@ Coups <- read.delim("http://www.uky.edu/~clthyn2/coup_data/powell_thyne_coups_fi
 Coups$iso3c[Coups$country=="Yemen Arab Republic; N. Yemen"] <- "YAR"
 Coups$iso3c[Coups$country=="Republic of Vietnam"] <- "RVN"
 
-# Make the chart
-png("stack.coups.current.png", width = 8, height = 2, units = "in", res = 300, bg = "white")
+# Make the chart with production date embedded in filename
+png(sprintf("stack.coups.%s.png", paste0(unlist(strsplit(as.character(Sys.Date()), "-")), collapse="")),
+  width = 8, height = 2, units = "in", res = 300, bg = "white")
 par(mai=c(0.25, 0.01, 0.1, 0.01), cex.axis = 0.4)
 with(Coups, plot(x=year, y=y, type="n", axes=FALSE, xlab="", ylab=""))
 with(Coups, text(x=year, y=y, labels=iso3c, cex=0.33, family="mono", col=ifelse(coup==2, "red", "black"), pos=3))
