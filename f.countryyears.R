@@ -1,4 +1,4 @@
-# This script creates a function, f.countryyears(), that produces a table of country-years with a number of id codes
+# This script creates a function, f.countryyears(), that produces a table of country-years with COW and PITF country codes
 # from the selected start and end points. It uses the Polity IV data set as its foundation, so it can't go back past
 # 1800 or forward past the last Polity update, usually the end of the previous calendar year. The function depends on
 # several of Hadley Wickham's packages, so be sure to install those before running. To add other country codes such as
