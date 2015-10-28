@@ -10,6 +10,8 @@
 # Note that the construction of Archigos.annual depends on a custom function that is pulled from GitHub
 # (f.countryyears) and another (source_github) that is created at the start of the script. The former works
 # right now on Windows and Mac, but you never know when these things will break. So, caveat emptor.
+#
+# For more on Archigos, see http://privatewww.essex.ac.uk/~ksg/archigos.html
 
 # Load required packages
 library(RCurl)
@@ -48,7 +50,7 @@ Archigos$duration.years = Archigos$duration.days/365
 Archigos$entry = as.factor(Archigos$entry)
 Archigos$exit = as.factor(Archigos$exit)
 
-# Get counts of exit modes by country-year
+# Get counts of exit events by country-year
 Archigos.annual.exits <- Archigos %>%
   mutate(year = as.numeric(substr(as.character(end), 1, 4))) %>%
   group_by(ccode, year, exit) %>%
@@ -58,7 +60,7 @@ Archigos.annual.exits <- Archigos %>%
 names(Archigos.annual.exits)[3:length(names(Archigos.annual.exits))] <- paste("exit",
   make.names(tolower(names(Archigos.annual.exits)[3:length(names(Archigos.annual.exits))])), sep = ".")
 
-# Get counts of entry modes by country-year
+# Get counts of entry events by country-year
 Archigos.annual.entries <- Archigos %>%
   mutate(year = as.numeric(substr(as.character(start), 1, 4))) %>%
   group_by(ccode, year, entry) %>%
