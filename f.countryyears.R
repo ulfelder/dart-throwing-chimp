@@ -2,10 +2,8 @@
 # from the selected start and end points. It uses the Polity IV data set as its foundation, so it can't go back past
 # 1800 or forward past the last Polity update, usually the end of the previous calendar year. The function depends on
 # several of Hadley Wickham's packages, so be sure to install those before running. To add other country codes such as
-# ISO3c, use the 'countrycode' package.
-
-# NOTE: This function was written on a Windows machine. I haven't tested it on a Mac and suspect that it won't work
-# there because of differences in the download process in lines 27-31.
+# ISO3c, use the 'countrycode' package. I tested it on a Windows 10 machine running R version 3.2.2., and I was told that
+# it worked on Mac's OS X, too.
 
 f.countryyears <- function(start = 1800, end = as.numeric(substr(Sys.Date(), 1, 4)) - 1) {
 
