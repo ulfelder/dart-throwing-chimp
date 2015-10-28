@@ -1,6 +1,18 @@
-# INGEST ARCHIGOS
+# This script ingests the Archigos data set, on the tenures of national political leaders, from the web and creates
+# two data frames in the current environment:
+#
+# 1. Archigos: A data frame in the original spell file format, i.e., one row for each leader episode with start and
+# end dates for their time in office, plus measures of episode duration in days, weeks, and years.
+#
+# 2. Archigos.annual: A country-year summary version that contains counts of leader entries and exits by mode
+# (e.g., regular vs. irregular entry) for each country for every year (1875-2014 at the moment).
+#
+# Note that the construction of Archigos.annual depends on a custom function that is pulled from GitHub
+# (f.countryyears) and another (source_github) that is created at the start of the script. The former works
+# right now on Windows and Mac, but you never know when these things will break. So, caveat emptor.
 
 # Load required packages
+library(RCurl)
 library(rvest)
 library(stringr)
 library(dplyr)
@@ -13,7 +25,7 @@ source_github <- function(u) {
   eval(parse(text = script), envir=.GlobalEnv)
 }
 
-# Use source_github() to get f.countryyears(), a function to make a table of country-years
+# Use source_github() to get f.countryyears(), a function to make a table of country-years from Polity IV
 source_github("https://raw.githubusercontent.com/ulfelder/dart-throwing-chimp/master/f.countryyears.R")
 
 # Get the Archigos data set, which is a spell file of leaders' tenures
@@ -32,11 +44,11 @@ Archigos$duration.days = with(Archigos, as.numeric(difftime(end, start, unit = "
 Archigos$duration.weeks = with(Archigos, as.numeric(difftime(end, start, unit = "weeks")))
 Archigos$duration.years = Archigos$duration.days/365
 
-# Entry and exit modes as factors
+# Set variables for entry and exit modes to factor type
 Archigos$entry = as.factor(Archigos$entry)
 Archigos$exit = as.factor(Archigos$exit)
 
-# Get counts of exit types by country-year
+# Get counts of exit modes by country-year
 Archigos.annual.exits <- Archigos %>%
   mutate(year = as.numeric(substr(as.character(end), 1, 4))) %>%
   group_by(ccode, year, exit) %>%
@@ -46,7 +58,7 @@ Archigos.annual.exits <- Archigos %>%
 names(Archigos.annual.exits)[3:length(names(Archigos.annual.exits))] <- paste("exit",
   make.names(tolower(names(Archigos.annual.exits)[3:length(names(Archigos.annual.exits))])), sep = ".")
 
-# Get counts of entry types by country-year
+# Get counts of entry modes by country-year
 Archigos.annual.entries <- Archigos %>%
   mutate(year = as.numeric(substr(as.character(start), 1, 4))) %>%
   group_by(ccode, year, entry) %>%
