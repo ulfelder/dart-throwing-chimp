@@ -4,6 +4,9 @@
 # several of Hadley Wickham's packages, so be sure to install those before running. To add other country codes such as
 # ISO3c, use the 'countrycode' package.
 
+# NOTE: This function was written on a Windows machine. I haven't tested it on a Mac and suspect that it won't work
+# there because of differences in the download process in lines 27-31.
+
 f.countryyears <- function(start = 1800, end = as.numeric(substr(Sys.Date(), 1, 4)) - 1) {
 
   # Package dependencies
