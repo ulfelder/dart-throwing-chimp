@@ -12,7 +12,6 @@ f.countryyears <- function(start = 1800, end = as.numeric(substr(Sys.Date(), 1, 
   require(rvest)
   require(stringr)
   require(readxl)
-  require(countrycode)
 
   # Get url for latest version of Polity in .xls format by parsing the CSP data page
 
