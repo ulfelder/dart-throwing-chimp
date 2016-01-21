@@ -1,11 +1,10 @@
 # Load required packages and functions
-library(foreign)
 library(survival)
 library(RColorBrewer)
 
 # Download and ingest the Geddes Wright Frantz data from the web
 temp <- tempfile()
-download.file("http://sites.psu.edu/dictators/wp-content/uploads/sites/12570/2014/07/GWF-Autocratic-Regimes-1.2.zip", temp)
+download.file("http://sites.psu.edu/dictators/wp-content/uploads/sites/12570/2015/04/GWF-Autocratic-Regimes-1.2.zip", temp)
 gwf <- read.delim(unz(temp, "GWF Autocratic Regimes 1.2/GWF_AllPoliticalRegimes.txt"), stringsAsFactors = FALSE)
 unlink(temp)
 
