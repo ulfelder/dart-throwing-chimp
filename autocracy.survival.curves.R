@@ -1,6 +1,3 @@
-# Clear workspace
-rm(list=ls(all=TRUE))
-
 # Load required packages and functions
 library(foreign)
 library(survival)
