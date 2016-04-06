@@ -3,6 +3,7 @@
 
 library(dplyr)
 library(rvest)
+library(gam)
 
 # get historical data, following http://www.r-bloggers.com/using-rvest-to-scrape-an-html-table/
 url <- "http://bikeraceinfo.com/classics/paris-roubaix/paris-roubaix-index.html"
