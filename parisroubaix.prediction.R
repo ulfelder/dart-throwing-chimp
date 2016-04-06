@@ -36,4 +36,4 @@ plot(PR$time, mod2.res)
 plot(mod2, se=TRUE, ask=TRUE) # clear nonlinear association with time, so prefer this version
 
 # use preferred model to generate a prediction for 2016
-p2016 <- 60 * (predict(mod2, newdata=PR[nrow(PR),], sefit=TRUE))  # 6 hrs 5 min 24 sec
+p2016 <- 60 * (predict(mod2, newdata=PR[nrow(PR),], sefit=TRUE))
