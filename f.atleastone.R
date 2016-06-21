@@ -11,6 +11,10 @@
 #
 # > f.atleastone(rain)
 # [1] 0.9856
+#
+# If you've got a vector of probabilities of independent events that aren't sequenced, you can just use:
+# 
+#     1 - (prod(1 - vector))
 
 f.atleastone <- function(vector) {
 
