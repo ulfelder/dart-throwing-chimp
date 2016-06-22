@@ -20,7 +20,7 @@ f.atleastone <- function(vector) {
 
     p.conditional <- vector()
 
-    for (i in 1:length(vector)) {
+    for (i in seq_along(vector)) {
 
         if (i == 1) {
 
