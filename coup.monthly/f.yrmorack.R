@@ -3,7 +3,7 @@
 # countries with populations larger than 500,000 as of 2014. I use it as scaffolding for the construction of country-month
 # analysis files from other sources.
 #
-# The function depends on the following packages: DataCombine, countrycode, and lubridate.
+# The function depends on the following packages: countrycode, lubridate.
 #
 # The function is called f.yrmorack, and you call it like this:
 #
@@ -32,14 +32,12 @@ f.yrmorack <- function(startdate, enddate) {
 
      # First, we need a function to make the stacks for individual countries
      kuntry <- function(country, birthdate, deathdate) {
-          require(DataCombine)
           start <- ifelse(birthdate > startdate, birthdate, startdate)
           end <- ifelse(deathdate < enddate, deathdate, enddate)
-          Data <- data.frame(country = rep(country, 2), date = as.Date(c(start, end)), stringsAsFactors = FALSE)
-          EData <- TimeExpand(Data, GroupVar = "country", TimeVar = "date", by = "month")
+          EData <- data.frame(country = country, date = seq(as.Date(start), as.Date(end), by="1 month"), stringsAsFactors=FALSE)
           EData$year <- as.integer(substr(EData$date, 1, 4))
           EData$month <- as.integer(substr(EData$date, 6, 7))
-          EData <- VarDrop(EData, "date")
+          EData$date <- NULL
           return(EData)
      }
 
@@ -56,7 +54,7 @@ f.yrmorack <- function(startdate, enddate) {
      CAR <- kuntry("Central African Republic", "1960-08-13", enddate)
      Chad <- kuntry("Chad", "1960-08-11", enddate)
      Comoros <- kuntry("Comoros", "1975-07-06", enddate)
-     DROC <- kuntry("Congo-Kinshasa", "1960-06-30", enddate)
+     DROC <- kuntry("Congo-Kinshasa", "1960-06-01", enddate) # actually June 30, but that produces weird error w/repeating 3s
      Congo <- kuntry("Congo-Brazzaville", "1960-08-15", enddate)
      IvoryCoast <- kuntry("Ivory Coast", "1960-08-07", enddate)
      Djibouti <- kuntry("Djibouti", "1977-06-27", enddate)
@@ -284,10 +282,6 @@ f.yrmorack <- function(startdate, enddate) {
      rack[rack$country=="North Vietnam", "iso3c"] <- "VDR"
      rack[rack$country=="Soviet Union", "iso3c"] <- "SUN"
      rack[rack$country=="Serbia and Montenegro", "iso3c"] <- "SCG"
-
-     # Get rid of rows inadvertently created for countries that died before the start date
-     tmpdate <- as.Date(lubridate::ymd(paste0(rack$year, "-", rack$month, "-01")))
-     rack <- rack[tmpdate >= startdate,]
      
      # Order by country name and date
      rack <- rack[order(rack$country, rack$year, rack$month),]
