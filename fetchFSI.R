@@ -2,6 +2,7 @@
 # table from them
 
 library(dplyr)
+library(stringr)
 library(readxl)
 library(countrycode)
 
@@ -9,8 +10,11 @@ url.archive <- "http://fsi.fundforpeace.org/library/fragilestatesindex-2006to201
 url.2015 <- "http://fsi.fundforpeace.org/library/fragilestatesindex-2015.xlsx"
 url.2016 <- "http://fsi.fundforpeace.org/library/fragilestatesindex-2016.xlsx"
 
-archive.years <- seq(2014, 2006)
+# get vector of years covered by archive sheet from file name to use for ingesting it
+archive.years <- as.numeric(str_extract_all(url.archive, "\\(?[0-9]+\\)?")[[1]])
+archive.years <- seq(archive.years[1], archive.years[2])
 
+# vector of cleaner names to give to columns as ingested
 fsivars <- c("rank", "country", "fsi.total", "fsi.demographic.pressures", "fsi.refugees",
              "fsi.group.grievance", "fsi.human.flight", "fsi.uneven.development", 
              "fsi.poverty", "fsi.legitimacy", "fsi.services", "fsi.human.rights",
@@ -18,7 +22,9 @@ fsivars <- c("rank", "country", "fsi.total", "fsi.demographic.pressures", "fsi.r
 
 # archived years
 temp <- paste0(tempfile(), ".xlsx")
+
 download.file(url.archive, destfile = temp, mode = "wb")
+
 FSI.archive <- lapply(archive.years, function(i) {
 
   DF <- read_excel(path = temp, sheet = match(i, archive.years))
@@ -33,39 +39,55 @@ FSI.archive <- lapply(archive.years, function(i) {
   return(DF)
 
 })
+
 FSI.archive <- bind_rows(FSI.archive)
 
 # standalone years
-temp <- paste0(tempfile(), ".xlsx")
-download.file(url.2015, destfile = temp, mode = "wb")
-FSI.2015 <- read_excel(path = temp)
-unlink(temp)
-names(FSI.2015) <- fsivars
-FSI.2015$year <- 2015
-FSI.2015$rank <- NULL
 
-temp <- paste0(tempfile(), ".xlsx")
-download.file(url.2016, destfile = temp, mode = "wb")
-FSI.2016 <- read_excel(path = temp)
-unlink(temp)
-names(FSI.2016) <- fsivars
-FSI.2016$year <- 2015
-FSI.2016$rank <- NULL
+fetchFSI <- function(year) {
+
+  url <- sprintf("http://fsi.fundforpeace.org/library/fragilestatesindex-%s.xlsx", year)
+
+  temp <- paste0(tempfile(), ".xlsx")
+  
+  download.file(url, destfile = temp, mode = "wb")
+
+  FSI <- read_excel(path = temp)
+
+  unlink(temp)
+
+  names(FSI) <- fsivars
+
+  FSI$year <- year
+
+  FSI$rank <- NULL
+
+  return(FSI)
+
+}
+
+FSI.2015 <- fetchFSI(2015)
+FSI.2016 <- fetchFSI(2016)
 
 # put it all together
 FSI <- bind_rows(list(FSI.archive, FSI.2015, FSI.2016)) %>%
   arrange(country, year) %>%
   filter(country != "AVERAGE" & !is.na(country))
 
-# fix some country names before adding codes; got this with manual check
+# fix some country name typos before adding codes; got this with manual check
+# for rows where is.na(code) after running countrycode
 FSI$country[FSI$country == "Dijbouti"] <- "Djibouti"
 FSI$country[FSI$country == "Serbia and Montenegro"] <- "Serbia"
 FSI$country[FSI$country == "Trinadad"] <- "Trinidad and Tobago"
 
-# add country code
-FSI$code <- countrycode::countrycode(FSI$country, "country.name", "iso3c")
-
-# reorder columns and drop country name to avoid merging hassles
+# add country code, reorder columns, drop country name to avoid merging hassles, 
+# and recreate ranking variable
 FSI <- FSI %>%
-  select(code, year, everything()) %>%
-  select(-country)
+  mutate(code = countrycode::countrycode(country, "country.name", "iso3c")) %>%
+  select(-country) %>%
+  group_by(year) %>%
+  arrange(-fsi.total) %>%
+  mutate(rank = seq_along(fsi.total)) %>%
+  select(code, year, rank, everything()) %>%
+  ungroup() %>%
+  arrange(code, year)
