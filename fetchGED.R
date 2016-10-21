@@ -19,8 +19,7 @@ GED.cm <- GED.events %>%
             ged.deaths.high = sum(high_est, na.rm = TRUE),
             ged.deaths.civilians = sum(deaths_civilians, na.rm = TRUE)) %>%
   left_join(with(GED.events, expand.grid(country = unique(country), year = unique(year), month = seq(12), stringsAsFactors = FALSE)), .) %>%
-  arrange(country, year, month) %>%
-  select(country, everything())
+  arrange(country, year, month)
 GED.cm[is.na(GED.cm)] = 0 # replace NAs with 0s
 
 # add country code. doing this after last step so NAs in iso3c don't get replaced with 0s
