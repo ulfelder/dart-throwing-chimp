@@ -15,7 +15,7 @@ acledr.years <- function(start = 1997, end = as.numeric(substr(Sys.Date(), 1, 4)
 
   })
 
-  DF <- rbind_all(List) %>%
+  DF <- bind_rows(List) %>%
     arrange(as.Date(event_date), gwno, event_type, actor1, actor2)
 
   return(DF)
