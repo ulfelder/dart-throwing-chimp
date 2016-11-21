@@ -1,5 +1,3 @@
-# a few functions to get ACLED data and summarize it at the country-month level
-
 require(dplyr)
 require(tidyr)
 require(lubridate)
@@ -40,7 +38,9 @@ acledr.country <- function(country = "Nigeria") {
   return(DF)
 
 }
-acledr.summarize.monthly <- function(acleddata) {
+
+# summarize ACLED in country-month counts
+acledr.como <- function(acleddata) {
 
   # master table for merging incomplete tables
   ACLED.cm.master <- with(acleddata, expand.grid(gwno = unique(gwno),
@@ -106,8 +106,19 @@ acledr.summarize.monthly <- function(acleddata) {
   DF <- ACLED.cm.types %>%
     merge(., ACLED.cm.deaths) %>%
     merge(., ACLED.cm.deaths.civilian) %>%
-    merge(., ACLED.cm.deaths.battle)
+    merge(., ACLED.cm.deaths.battle) %>%
+    arrange(country, year, month)
 
   return(DF)
+
+}
+
+# make a time series object with a logged count of a particular country-month series. assumes
+# data is in format produced by acledr.como
+acledr.tslog <- function(df, var) {
+
+  ts(log1p(df[,var]),
+     start = c(first(df[,"year"]), first(df[,"month"])),
+     frequency = 12)
 
 }
