@@ -1,6 +1,3 @@
-# make plots of state-level data on participation in Women's March 2017 events
-# code seeded by https://gist.github.com/benmarwick/a1ac9c7235ebef542824512162ff2f44
-
 data_source <- "https://docs.google.com/spreadsheets/d/1xa0iLqYKz8x9Yc_rfhtmSOJQ2EGgeUVjvV4A8LsIaxY/htmlview?sle=true#gid=0"
 
 library(dplyr)
@@ -8,51 +5,37 @@ library(tidyr)
 library(stringr)
 library(rvest)
 library(Hmisc)
+library(WDI)
+library(scales)
 
-# load and clean location-level data on participation
+# load and clean event-level data on women's marches
 crowds <- 
   read_html(data_source)  %>% 
   html_table(header = FALSE) %>%
   .[[1]] %>%
-  slice(9:n()) %>%
+  # get rid of junk rows at the top
+  slice(12:n()) %>% 
   transmute(location = X2,
-            est.low = as.numeric(gsub(",", "", X4)),
-            est.high = as.numeric(gsub(",", "", X5)),
-            source = X8) %>%
-  filter(!is.na(location),
-         !grepl("Disablity", location))
+            state = X4,
+            country = X5,
+            est.low = as.numeric(gsub(",", "", X6)),
+            est.high = as.numeric(gsub(",", "", X7)),
+            source = X10) %>%
+  # clear out some remaining rows with no info or aggregates
+  filter(!is.na(country),
+         !grepl("Disablity", location),
+         !grepl("Int'l", location))
 
-# manually fix a couple of location labels to facilitate splitting to come
-crowds$location[which(crowds$location == "Champaign IL")] <-  "Champaign, IL"
-crowds$location[which(crowds$location == "Washington DC")] <-  "Washington, DC"
+### US STATES ###
 
-# get data for US events only by splitting at row where international total is inserted, then split city & state info
-crowds_usa <- crowds %>%
-  slice(1:(which(grepl("Int'l", crowds$location)) - 1)) %>%
-  filter(!is.na(location) & !is.null(location) & location != "") %>%
-  separate(location, c("city", "state"), ",") %>%
-  mutate(city = str_trim(city),
-         state = str_trim(state)) %>%
-  mutate(state = ifelse(state %in% state.abb | state == "DC", state, state.abb[match(state, state.name)]))
-
-# summarize by state
-state_totals <- crowds_usa %>%
+# state-level march data
+state_marchers <- crowds %>%
+  filter(country == "US") %>%
   group_by(state) %>%
-  summarise(total.high = sum(est.high, na.rm = T),
-            total.low = sum(est.low, na.rm = T)) %>%
-  arrange(desc(total.high))
+  summarise(total.high = sum(est.high, na.rm = TRUE),
+            total.low = sum(est.low, na.rm = TRUE))
 
-png("womens.marchers.by.state.png", res = 150, width = 5, height = 7, unit = "in")
-par(mai=c(1,0.25,0.25,0.25))
-dotchart2(state_totals$total.high,
-         labels = state_totals$state, cex.labels = 3/4,
-         lines = TRUE, lwd = 1/20, lty = 3,
-         dotsize = 1, col = "deeppink2", pch = 20,
-         xlab = 'total marchers (high est.)')
-title(main=list("Women's march participants by U.S. state", cex=0.9))
-dev.off()
-
-# load and clean/prep state population data from Census
+# state-level population data
 state_pops <- read.csv("http://www2.census.gov/programs-surveys/popest/datasets/2010-2016/national/totals/nst-est2016-alldata.csv",
                        stringsAsFactors = FALSE) %>%
   filter(STATE > 0) %>%
@@ -61,23 +44,88 @@ state_pops <- read.csv("http://www2.census.gov/programs-surveys/popest/datasets/
   mutate(state = state.abb[match(statename, state.name)])
 state_pops$state[state_pops$statename == "District of Columbia"] <- "DC"
 
-# merge the pop data with the march data and compute rates
-state_totals_pop <- merge(state_totals, state_pops) %>%
-  filter(!is.na(state), state != "DC") %>%
-  mutate(marchers.per.1000.high = (total.high/pop) * 1000,
-         marchers.per.1000.low  = (total.low/pop) * 1000) %>%
-  arrange(desc(marchers.per.1000.high))
+# join those two and compute shares
+state <- left_join(state_marchers, state_pops) %>%
+  filter(!is.na(pop)) %>%
+  mutate(marchers.percent.high = (total.high/pop) * 100,
+         marchers.percent.low  = (total.low/pop) * 100) %>%
+  arrange(desc(marchers.percent.high))
 
-png("womens.marchers.per.1000.png", res = 150, width = 5, height = 7, unit = "in")
+# create a version that drops DC, which is an outlier in a couple of ways
+state_nodc <- filter(state, state != "DC")
+
+png("womens.marchers.state.percent.png",
+  res = 150, width = 5, height = 7, unit = "in")
 par(mai=c(1,0.25,0.25,0.25))
-dotchart2(state_totals_pop$marchers.per.1000.high,
-         labels = state_totals_pop$statename, cex.labels = 3/4,
+dotchart2(state_nodc$marchers.percent.high,
+         labels = state_nodc$statename, cex.labels = 3/4,
          lines = TRUE, lwd = 1/20, lty = 3,
          dotsize = 1, col = "deeppink2", pch = 20,
-         xlab = "2017 Women's March participants \nper 1,000 state pop.")
+         xlab = "2017 Women's March event participants \nas a share of pop. of events' host state")
 dev.off()
 
-# make separate data frame of international events (for possible future use)
-crowds_global <- crowds %>%
-  slice((which(grepl("Int'l", crowds$location)) + 1):n()) %>%
-  filter(!is.na(location))
+# get and prep election results data
+state_vote <- read.table("https://raw.githubusercontent.com/kshaffer/election2016/master/2016ElectionResultsByState.csv",
+                          sep = ",", header = TRUE, stringsAsFactors = FALSE) %>%
+  mutate(trumpshare = trumpVotes/totalVotes * 100) %>%
+  select(state = postal, trumpshare)
+
+# merge vote data with no-DC version of state data
+state_nodc <- left_join(state_nodc, state_vote)
+
+# make scatter plot of participation vs. trump vote share
+png("womens.marchers.relative.to.trump.vote.png",
+  res = 150, width = 5, height = 5, unit = "in")
+par(mai=c(1, 1, 0.1, 0.1))
+plot(x = state_nodc$trumpshare, xlim = c(25,75),
+     y = state_nodc$marchers.percent.high, ylim = c(0,4),
+     type = "n", axes = FALSE, xlab = "Trump's host-state vote share", ylab = "total marchers as % of host-state pop.")
+text(x = state_nodc$trumpshare, xlim = c(25,75),
+     y = state_nodc$marchers.percent.high,
+     labels = state_nodc$state,
+     cex = 1, col = scales::alpha("black", 2/3))
+axis(1, at = seq(25, 75, 25))
+axis(2, at = seq(0,4,1), las = 2)
+dev.off()
+
+### GLOBAL ###
+
+# get country-level sums of crowd sizes
+crowds_intl <- crowds %>%
+  group_by(country) %>%
+  summarise(total.low = sum(est.low, na.rm = TRUE),
+            total.high = sum(est.high, na.rm = TRUE)) %>%
+  arrange(desc(total.high)) %>%
+  filter(country != "") %>%
+  mutate(iso3c = countrycode::countrycode(country, "country.name", "iso3c"))
+
+crowds_intl$country[crowds_intl$country == "Czech"] <- "Czechia"
+crowds_intl$iso3c[crowds_intl$country == "Czechia"] <- "CZE"
+crowds_intl$iso3c[crowds_intl$country == "Kosovo"] <- "KOS"
+
+# use WDI package get population data and prep it for merging
+pop_intl <- WDI(country="all",
+                indicator = "SP.POP.TOTL",
+                extra = TRUE,
+                start = 2015, end = 2015) %>%
+  filter(!is.na(iso3c)) %>%
+  select(iso3c, pop = SP.POP.TOTL) %>%
+  # add a row for Kosovo, which WB doesn't consider to be a state, I guess
+  rbind(data.frame(iso3c = "KOS", pop = 1824000)) %>%
+  mutate(iso3c = as.character(iso3c))
+
+# merge and arrange country data 
+intl <- left_join(crowds_intl, pop_intl) %>%
+  mutate(participation.rate = (total.high/pop) * 100) %>%
+  arrange(desc(participation.rate))
+
+# make dot plot of country participation rates
+png("womens.march.global.participation.rate.png",
+    res = 150, width = 5, height = 7.5, unit = "in")
+par(mai=c(1,0.2,0.2,0.2))
+dotchart2(intl$participation.rate,
+         labels = intl$country, cex.labels = 7/10,
+         lines = TRUE, lwd = 1/20, lty = 3,
+         dotsize = 1, col = "deeppink2", pch = 20,
+         xlab = 'total marchers (high estimates) \nas a percentage of national population')
+dev.off()
