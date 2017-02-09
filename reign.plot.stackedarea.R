@@ -78,4 +78,4 @@ dev.off()
 # 13 = dictatorship: personal
 # 14 = presidential democracy
 # 15 = civilian interim
-16 = warlordism
+# 16 = warlordism
