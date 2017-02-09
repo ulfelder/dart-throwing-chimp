@@ -22,7 +22,7 @@ REIGN <- filter(REIGN, !is.na(year))
 # vector of labels for higher-level types
 types <- c("democracy", "military autocracy", "personalist autocracy", "one-party autocracy", "hybrid autocracy", "other")
 
-# create a factor with original types mapped to those higher-order types
+# create a factor with original types mapped to those higher-order types; complete key at end of script
 REIGN$macrotype <- NA
 REIGN$macrotype[REIGN$regimetype == 8 | REIGN$regimetype == 14] <- 1 # democracy
 REIGN$macrotype[REIGN$regimetype >= 2 & REIGN$regimetype <= 4] <- 2 # military autocracy
@@ -61,3 +61,21 @@ ggplot(Regimes, aes(x = date, y = share, fill = macrotype)) +
   scale_fill_manual(values = mypal) +
   labs(fill = "regime type", x = "", y = "share of states worldwide")
 dev.off()
+
+# key to numbered regime types in REIGN, via Curtis Bell
+# 1 = occupied by foreign government
+# 2 = dictatorship: indirect military
+# 3 = dictatorship: military
+# 4 = military interim
+# 5 = dictatorship: military-personal hybrid
+# 6 = dictatorship: monarchy
+# 7 = dictatorship: oligarchy
+# 8 = parliamentary democracy
+# 9 = dictatorship: single party system
+# 10 = dictatorship: party/military hybrid
+# 11 = dictatorship: party/personal hybrid
+# 12 = dictatorship: party/military/personal hybrid
+# 13 = dictatorship: personal
+# 14 = presidential democracy
+# 15 = civilian interim
+16 = warlordism
