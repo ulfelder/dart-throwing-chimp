@@ -29,8 +29,10 @@ source_github <- function(u) {
   eval(parse(text = script), envir=.GlobalEnv)
 }
 
-# Use source_github() to get f.countryyears(), a function to make a table of country-years from Polity IV
+# Use source_github() to get a couple of helper functions we'll use to make master tables of 
+# country-years and country-months into which to merge Archigos tabulations
 source_github("https://raw.githubusercontent.com/ulfelder/dart-throwing-chimp/master/f.countryyears.R")
+source_github("https://raw.githubusercontent.com/ulfelder/dart-throwing-chimp/master/f.yrmorack.R")
 
 # Get the Archigos data set, which is a spell file of leaders' tenures
 Archigos <- "http://privatewww.essex.ac.uk/~ksg/archigos.html" %>%        # Provide url of page that hosts data set
