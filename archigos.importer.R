@@ -35,7 +35,8 @@ Archigos <- "http://privatewww.essex.ac.uk/~ksg/archigos.html" %>%        # Prov
   read_html(.) %>%                                                        # Parse the html for the relevant page
   html_nodes("a") %>%                                                     # Identify all the hyperlinks in the results
   html_attr("href") %>%                                                   # Extract the urls for those hyperlinks as a vector of strings
-  str_subset("\\.txt") %>%                                                # Trim down to the one we want, which incls ".txt"
+  str_subset("\\.txt") %>%                                                # Trim down to the one we want, which incls ".txt"...
+  str_subset("Archigos") %>%                                              # ...and "Archigos"
   paste0("http://privatewww.essex.ac.uk/~ksg/", .) %>%                    # Add the leading portion of full url
   read.delim(., stringsAsFactors=FALSE)                                   # Ingest tab-delimited txt file from that link
 
@@ -52,7 +53,7 @@ Archigos$exit = as.factor(Archigos$exit)
 
 # Get counts of exit events by country-year
 Archigos.annual.exits <- Archigos %>%
-  mutate(year = as.numeric(substr(as.character(end), 1, 4))) %>%
+  mutate(year = year(end)) %>%
   group_by(ccode, year, exit) %>%
   tally() %>%
   spread(., key = exit, value = n, fill = NA)
@@ -62,7 +63,7 @@ names(Archigos.annual.exits)[3:length(names(Archigos.annual.exits))] <- paste("e
 
 # Get counts of entry events by country-year
 Archigos.annual.entries <- Archigos %>%
-  mutate(year = as.numeric(substr(as.character(start), 1, 4))) %>%
+  mutate(year = year(start)) %>%
   group_by(ccode, year, entry) %>%
   tally() %>%
   spread(., key = entry, value = n, fill = NA)
@@ -80,3 +81,42 @@ Archigos.annual[is.na(Archigos.annual)] <- 0
 
 # Get rid of the interim summary tables
 rm(Archigos.annual.entries, Archigos.annual.exits)
+
+### MONTHLY
+
+# Get counts of exit events by country-month
+Archigos.monthly.exits <- Archigos %>%
+  mutate(yrmo = as.yearmon(end)) %>%
+  group_by(ccode, yrmo, exit) %>%
+  tally() %>%
+  spread(., key = exit, value = n, fill = NA)
+# Make better variable names
+names(Archigos.monthly.exits)[3:length(names(Archigos.monthly.exits))] <- paste("exit",
+  make.names(tolower(names(Archigos.monthly.exits)[3:length(names(Archigos.monthly.exits))])), sep = ".")
+Archigos.monthly.exits$iso3c <- countrycode(Archigos.monthly.exits$ccode, "cown", "iso3c")
+
+# Get counts of entry events by country-year
+Archigos.monthly.entries <- Archigos %>%
+  mutate(yrmo = as.yearmon(start)) %>%
+  group_by(ccode, yrmo, entry) %>%
+  tally() %>%
+  spread(., key = entry, value = n, fill = NA)
+# Make better variable names
+names(Archigos.monthly.entries)[3:length(names(Archigos.monthly.entries))] <- paste("entry",
+  make.names(tolower(names(Archigos.monthly.entries)[3:length(names(Archigos.monthly.entries))])), sep = ".")
+Archigos.monthly.entries$iso3c <- countrycode(Archigos.monthly.entries$ccode, "cown", "iso3c")
+  
+# Merge those counts with a table of country-years derived from Polity using f.countryyears()
+Archigos.monthly <- f.yrmorack("1875-01-01",
+                               sprintf("%s-12-31", max(year(Archigos$end)))) %>%
+  mutate(yrmo = as.yearmon(paste(year, month, sep = "-"))) %>%
+  select(-year, -month) %>%
+  left_join(., Archigos.monthly.entries) %>%
+  left_join(., Archigos.monthly.exits) %>%
+  select(-ccode)
+
+# Replace the NAs with 0s
+Archigos.monthly[is.na(Archigos.monthly)] <- 0
+
+# Get rid of the interim summary tables
+rm(Archigos.monthly.entries, Archigos.monthly.exits)
