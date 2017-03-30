@@ -19,6 +19,8 @@ library(rvest)
 library(stringr)
 library(dplyr)
 library(tidyr)
+library(lubridate)
+library(zoo)
 
 # Function to source scripts from GitHub
 source_github <- function(u) {
