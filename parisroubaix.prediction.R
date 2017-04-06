@@ -1,7 +1,8 @@
-# script to predict finishing time of 2016 Paris-Roubaix for this contest:
-# http://pages.rapha.cc/spring-monuments-competition/spring-monuments-competition-4-paris-roubaix
+# script to predict finishing time of men's Paris-Roubaix race
 
 library(dplyr)
+library(tidyr)
+library(stringr)
 library(rvest)
 library(gam)
 
@@ -19,10 +20,13 @@ names(PR) <- c("year", "first", "second", "third", "distance", "speed")
 # convert variable types and calculate finish time from reported data
 PR <- PR %>%
   transmute(year = as.numeric(year), 
-            distance = as.numeric(sub(" km", "", distance)), # strip unit from recent years that include it before converting
-            speed = as.numeric(speed)) %>%
-  filter(!is.na(year)) %>%
-  mutate(time = distance/speed)
+            wintime = str_extract(first, "[0-9]{1,2}[a-z]{2} [0-9]{1,2}[a-z]{3} [0-9]{1,2}[a-z]{3}"),
+            distance = as.numeric(sub(" km", "", distance))) %>%
+  separate(wintime, c("hours", "minutes", "seconds"), sep = " ") %>%
+  mutate_at(vars(hours, minutes, seconds), funs(as.numeric(gsub("[a-z]", "", .)))) %>%
+  # get winner's finish time in minutes
+  mutate(time = 1/60 * (hours * 3600 + minutes * 60 + seconds)) %>%
+  filter(!is.na(year))
 
 # simple linear model with time as a function of distance and historical year
 mod1 <- lm(time ~ distance + year, data = PR, na.action = na.exclude)
@@ -35,5 +39,6 @@ mod2.res <- resid(mod2)
 plot(PR$time, mod2.res)
 plot(mod2, se=TRUE, ask=TRUE) # clear nonlinear association with time, so prefer this version
 
-# use preferred model to generate a prediction for 2016
-p2016 <- 60 * (predict(mod2, newdata=PR[nrow(PR),], sefit=TRUE))
+# use preferred model to generate a prediction for current year. this assumes that the
+# current year is a row in the original table, with the race distance given.
+p <- predict(mod2, newdata=PR[nrow(PR),], sefit=TRUE)
