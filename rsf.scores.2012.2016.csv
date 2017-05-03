@@ -1,0 +1,889 @@
+"country","year","score"
+"Afghanistan",2012,37.36
+"Afghanistan",2013,37.07
+"Afghanistan",2014,37.44
+"Afghanistan",2015,37.75
+"Afghanistan",2016,39.46
+"Albania",2012,30.88
+"Albania",2013,29.92
+"Albania",2014,28.77
+"Albania",2015,29.92
+"Albania",2016,29.92
+"Algeria",2012,36.54
+"Algeria",2013,36.26
+"Algeria",2014,36.63
+"Algeria",2015,41.69
+"Algeria",2016,42.83
+"Andorra",2012,6.82
+"Andorra",2013,6.82
+"Andorra",2014,19.87
+"Andorra",2015,19.87
+"Andorra",2016,21.03
+"Angola",2012,37.8
+"Angola",2013,36.5
+"Angola",2014,37.84
+"Angola",2015,39.89
+"Angola",2016,40.42
+"Argentina",2012,25.67
+"Argentina",2013,25.27
+"Argentina",2014,26.11
+"Argentina",2015,25.09
+"Argentina",2016,25.07
+"Armenia",2012,28.04
+"Armenia",2013,29.07
+"Armenia",2014,28.43
+"Armenia",2015,28.79
+"Armenia",2016,30.38
+"Australia",2012,15.24
+"Australia",2013,16.91
+"Australia",2014,17.03
+"Australia",2015,17.84
+"Australia",2016,16.02
+"Austria",2012,9.4
+"Austria",2013,10.01
+"Austria",2014,10.85
+"Austria",2015,13.18
+"Austria",2016,13.47
+"Azerbaijan",2012,47.73
+"Azerbaijan",2013,52.87
+"Azerbaijan",2014,58.41
+"Azerbaijan",2015,57.89
+"Azerbaijan",2016,56.4
+"Bahrain",2012,62.75
+"Bahrain",2013,58.26
+"Bahrain",2014,58.69
+"Bahrain",2015,54.86
+"Bahrain",2016,58.88
+"Bangladesh",2012,42.01
+"Bangladesh",2013,42.58
+"Bangladesh",2014,42.95
+"Bangladesh",2015,45.94
+"Bangladesh",2016,48.36
+"Belarus",2012,48.35
+"Belarus",2013,47.82
+"Belarus",2014,47.98
+"Belarus",2015,54.32
+"Belarus",2016,52.43
+"Belgium",2012,12.94
+"Belgium",2013,12.8
+"Belgium",2014,11.98
+"Belgium",2015,14.18
+"Belgium",2016,12.75
+"Belize",2013,17.05
+"Belize",2014,18.54
+"Belize",2015,20.61
+"Belize",2016,23.43
+"Benin",2012,28.33
+"Benin",2013,28.83
+"Benin",2014,29.24
+"Benin",2015,28.97
+"Benin",2016,30.32
+"Bhutan",2012,28.42
+"Bhutan",2013,30.73
+"Bhutan",2014,32.65
+"Bhutan",2015,30.73
+"Bhutan",2016,30.73
+"Bolivia",2012,32.8
+"Bolivia",2013,31.04
+"Bolivia",2014,31.29
+"Bolivia",2015,31.78
+"Bolivia",2016,33.88
+"Bosnia and Herzegovina",2012,26.86
+"Bosnia and Herzegovina",2015,28.45
+"Bosnia and Herzegovina",2016,27.83
+"Bosnia and Herzegovina",2013,26.86
+"Bosnia and Herzegovina",2014,27.51
+"Botswana",2012,22.91
+"Botswana",2013,22.91
+"Botswana",2014,22.91
+"Botswana",2015,22.91
+"Botswana",2016,24.93
+"Brazil",2012,32.75
+"Brazil",2013,34.03
+"Brazil",2014,31.93
+"Brazil",2015,32.62
+"Brazil",2016,33.58
+"Brunei",2012,35.45
+"Brunei",2013,35.45
+"Brunei",2014,36.76
+"Brunei",2015,53.85
+"Brunei",2016,53.72
+"Bulgaria",2012,28.58
+"Bulgaria",2013,31.42
+"Bulgaria",2014,32.91
+"Bulgaria",2015,34.46
+"Bulgaria",2016,35.01
+"Burkina Faso",2012,23.7
+"Burkina Faso",2013,24.45
+"Burkina Faso",2014,23.79
+"Burkina Faso",2015,22.66
+"Burkina Faso",2016,23.85
+"Myanmar",2012,44.71
+"Myanmar",2013,41.43
+"Myanmar",2014,42.08
+"Burundi",2012,38.02
+"Burundi",2013,40.5
+"Burundi",2014,42.93
+"Burundi",2015,54.1
+"Burundi",2016,55.78
+"Ivory Coast",2013,31.63
+"Ivory Coast",2014,30.45
+"Cape Verde",2013,14.32
+"Cape Verde",2014,20.69
+"Cambodia",2012,41.81
+"Cambodia",2013,40.97
+"Cambodia",2014,40.99
+"Cambodia",2015,40.7
+"Cambodia",2016,42.07
+"Cameroon",2012,34.78
+"Cameroon",2013,38.13
+"Cameroon",2014,39.63
+"Cameroon",2015,40.53
+"Cameroon",2016,41.59
+"Canada",2012,12.69
+"Canada",2013,10.99
+"Canada",2014,10.99
+"Canada",2015,15.26
+"Canada",2016,16.53
+"Cape Verde",2012,14.33
+"Cape Verde",2015,19.82
+"Cape Verde",2016,18.02
+"Central African Republic",2012,26.61
+"Central African Republic",2013,33.13
+"Central African Republic",2014,33.84
+"Central African Republic",2015,33.6
+"Central African Republic",2016,36.12
+"Chad",2012,34.87
+"Chad",2013,40.22
+"Chad",2014,40.17
+"Chad",2015,40.59
+"Chad",2016,39.66
+"Chile",2012,26.24
+"Chile",2013,25.8
+"Chile",2014,NA
+"Chile",2015,19.23
+"Chile",2016,20.53
+"China",2012,73.07
+"China",2013,72.91
+"China",2014,73.55
+"China",2015,80.96
+"China",2016,77.66
+"Colombia",2012,37.48
+"Colombia",2013,36.68
+"Colombia",2014,39.08
+"Colombia",2015,44.11
+"Colombia",2016,41.47
+"Comoros",2013,24.52
+"Comoros",2014,24.52
+"Comoros",2012,24.52
+"Comoros",2015,24.33
+"Comoros",2016,24.33
+"Republic of the Congo",2015,35.84
+"Republic of the Congo",2016,36.73
+"Republic of the Congo",2013,29.44
+"Republic of the Congo",2014,NA
+"Costa Rica",2012,12.08
+"Costa Rica",2013,12.23
+"Costa Rica",2014,12.26
+"Costa Rica",2015,11.1
+"Costa Rica",2016,11.93
+"Croatia",2012,26.61
+"Croatia",2013,26.82
+"Croatia",2014,26.12
+"Croatia",2015,27.91
+"Croatia",2016,29.59
+"Cuba",2012,71.64
+"Cuba",2013,70.92
+"Cuba",2014,70.21
+"Cuba",2015,70.23
+"Cuba",2016,71.75
+"Cyprus",2012,13.83
+"Cyprus",2013,14.45
+"Cyprus",2014,16.52
+"Cyprus",2015,18.26
+"Cyprus",2016,19.79
+"Northern Cyprus",2015,29.54
+"Northern Cyprus",2016,29.88
+"Czech Republic",2012,10.17
+"Czech Republic",2013,10.07
+"Czech Republic",2014,11.62
+"Czech Republic",2015,16.66
+"Czech Republic",2016,16.91
+"North Korea",2015,83.76
+"North Korea",2016,84.98
+"DR Congo",2013,44.64
+"DR Congo",2014,44.31
+"Denmark",2012,7.08
+"Denmark",2013,7.43
+"Denmark",2014,8.24
+"Denmark",2015,8.89
+"Denmark",2016,10.36
+"Djibouti",2012,67.4
+"Djibouti",2013,70.34
+"Djibouti",2014,71.04
+"Djibouti",2015,70.9
+"Djibouti",2016,70.54
+"Dominican Republic",2012,28.34
+"Dominican Republic",2013,27.17
+"Dominican Republic",2014,27.31
+"Dominican Republic",2015,27.9
+"Dominican Republic",2016,26.76
+"DR Congo",2012,41.66
+"East Timor",2012,28.72
+"East Timor",2013,29.04
+"East Timor",2014,32.63
+"East Timor",2015,32.02
+"East Timor",2016,32.82
+"Ecuador",2012,34.69
+"Ecuador",2013,31.16
+"Ecuador",2014,33.65
+"Ecuador",2015,33.21
+"Ecuador",2016,33.64
+"Egypt",2012,48.66
+"Egypt",2013,51.89
+"Egypt",2014,50.17
+"Egypt",2015,54.45
+"Egypt",2016,55.78
+"El Salvador",2012,22.86
+"El Salvador",2013,21.57
+"El Salvador",2014,23.66
+"El Salvador",2015,27.2
+"El Salvador",2016,27.24
+"Equatorial Guinea",2012,67.2
+"Equatorial Guinea",2013,67.95
+"Equatorial Guinea",2014,66.23
+"Equatorial Guinea",2015,66.47
+"Equatorial Guinea",2016,66.47
+"Eritrea",2012,84.83
+"Eritrea",2013,84.83
+"Eritrea",2014,84.86
+"Eritrea",2015,83.92
+"Eritrea",2016,84.24
+"Estonia",2012,9.26
+"Estonia",2013,9.63
+"Estonia",2014,11.19
+"Estonia",2015,14.31
+"Estonia",2016,13.55
+"Ethiopia",2012,39.57
+"Ethiopia",2013,40.58
+"Ethiopia",2014,41.83
+"Ethiopia",2015,45.13
+"Ethiopia",2016,50.34
+"Fiji",2012,32.69
+"Fiji",2013,32.57
+"Fiji",2014,31.28
+"Fiji",2015,29.37
+"Fiji",2016,28.64
+"Finland",2012,6.38
+"Finland",2013,6.4
+"Finland",2014,7.52
+"Finland",2015,8.59
+"Finland",2016,8.92
+"France",2012,21.6
+"France",2013,21.89
+"France",2014,21.15
+"France",2015,23.83
+"France",2016,22.24
+"Gabon",2012,28.69
+"Gabon",2013,31.32
+"Gabon",2014,31.38
+"Gabon",2015,32.2
+"Gabon",2016,34.83
+"Gambia",2012,45.09
+"Gambia",2013,46.42
+"Gambia",2014,44.5
+"Gambia",2015,46.53
+"Gambia",2016,46.7
+"Georgia",2012,30.09
+"Georgia",2013,29.78
+"Georgia",2014,27.7
+"Georgia",2015,27.96
+"Georgia",2016,27.76
+"Germany",2012,10.24
+"Germany",2013,10.23
+"Germany",2014,11.47
+"Germany",2015,14.8
+"Germany",2016,14.97
+"Ghana",2012,17.27
+"Ghana",2013,16.29
+"Ghana",2014,15.5
+"Ghana",2015,17.95
+"Ghana",2016,17.95
+"Greece",2012,28.46
+"Greece",2013,31.33
+"Greece",2014,31.01
+"Greece",2015,30.35
+"Greece",2016,30.89
+"Guatemala",2012,29.39
+"Guatemala",2013,36.61
+"Guatemala",2014,37.92
+"Guatemala",2015,38.03
+"Guatemala",2016,39.33
+"Guinea",2012,28.49
+"Guinea",2013,31.67
+"Guinea",2014,32.56
+"Guinea",2015,33.08
+"Guinea",2016,33.15
+"Guinea-Bissau",2012,28.94
+"Guinea-Bissau",2015,29.03
+"Guinea-Bissau",2016,30.09
+"Guinea-Bissau",2013,30.05
+"Guinea-Bissau",2014,28.7
+"Guyana",2012,27.08
+"Guyana",2013,27.08
+"Guyana",2014,27.21
+"Guyana",2015,27.07
+"Guyana",2016,26.8
+"Haiti",2013,23.53
+"Haiti",2014,25.08
+"Haiti",2012,24.09
+"Haiti",2015,24.66
+"Haiti",2016,26.36
+"Honduras",2012,36.92
+"Honduras",2013,37.14
+"Honduras",2014,39.27
+"Honduras",2015,44.62
+"Honduras",2016,43.75
+"Hong Kong",2012,26.16
+"Hong Kong",2013,26.55
+"Hong Kong",2014,27.76
+"Hong Kong",2015,28.5
+"Hong Kong",2016,29.46
+"Hungary",2012,26.09
+"Hungary",2013,26.73
+"Hungary",2014,27.44
+"Hungary",2015,28.17
+"Hungary",2016,29.01
+"Iceland",2012,8.49
+"Iceland",2013,8.5
+"Iceland",2014,13.87
+"Iceland",2015,15.3
+"Iceland",2016,13.03
+"India",2012,41.22
+"India",2013,40.34
+"India",2014,40.49
+"India",2015,43.17
+"India",2016,42.94
+"Indonesia",2012,41.05
+"Indonesia",2013,38.15
+"Indonesia",2014,40.75
+"Indonesia",2015,41.72
+"Indonesia",2016,39.93
+"Iran",2012,73.4
+"Iran",2013,72.29
+"Iran",2014,72.32
+"Iraq",2012,44.67
+"Iraq",2013,45.44
+"Iraq",2014,47.76
+"Iraq",2015,54.35
+"Iraq",2016,54.03
+"Ireland",2012,10.06
+"Ireland",2013,10.87
+"Ireland",2014,11.2
+"Ireland",2015,12.4
+"Ireland",2016,14.08
+"Iran",2015,66.52
+"Iran",2016,65.12
+"Israel",2012,32.97
+"Israel",2013,31.19
+"Israel",2014,32.09
+"Israel",2015,32.58
+"Israel",2016,31.01
+"Italy",2012,26.11
+"Italy",2013,23.75
+"Italy",2014,27.94
+"Italy",2015,28.93
+"Italy",2016,26.26
+"Ivory Coast",2012,29.77
+"Ivory Coast",2015,30.17
+"Ivory Coast",2016,30.42
+"Jamaica",2012,9.88
+"Jamaica",2013,10.9
+"Jamaica",2014,11.18
+"Jamaica",2015,12.45
+"Jamaica",2016,12.73
+"Japan",2012,25.17
+"Japan",2013,26.02
+"Japan",2014,26.95
+"Japan",2015,28.67
+"Japan",2016,29.44
+"Jordan",2012,38.47
+"Jordan",2013,40.42
+"Jordan",2014,42.07
+"Jordan",2015,44.49
+"Jordan",2016,43.24
+"Kazakhstan",2012,55.08
+"Kazakhstan",2013,54.94
+"Kazakhstan",2014,53.46
+"Kazakhstan",2015,54.55
+"Kazakhstan",2016,54.01
+"Kenya",2012,27.8
+"Kenya",2013,30.7
+"Kenya",2014,32.07
+"Kenya",2015,31.16
+"Kenya",2016,31.2
+"Kosovo",2012,28.47
+"Kosovo",2015,30.5
+"Kosovo",2016,30.45
+"Kuwait",2012,28.28
+"Kuwait",2013,30.71
+"Kuwait",2014,30.84
+"Kuwait",2015,32.59
+"Kuwait",2016,33.61
+"Kyrgyzstan",2012,32.2
+"Kyrgyzstan",2013,31.24
+"Kyrgyzstan",2014,30.69
+"Kyrgyzstan",2015,30.16
+"Kyrgyzstan",2016,30.92
+"Laos",2015,71.58
+"Laos",2016,66.41
+"Laos",2012,67.99
+"Laos",2013,71.22
+"Laos",2014,71.25
+"Latvia",2012,22.89
+"Latvia",2013,21.1
+"Latvia",2014,18.12
+"Latvia",2015,17.38
+"Latvia",2016,18.62
+"Lebanon",2012,30.15
+"Lebanon",2013,31.89
+"Lebanon",2014,31.81
+"Lebanon",2015,31.95
+"Lebanon",2016,33.01
+"Lesotho",2012,28.36
+"Lesotho",2013,28.36
+"Lesotho",2014,28.36
+"Lesotho",2015,28.78
+"Lesotho",2016,28.78
+"Liberia",2012,29.89
+"Liberia",2013,30.65
+"Liberia",2014,30.78
+"Liberia",2015,30.71
+"Liberia",2016,31.12
+"Libya",2012,37.86
+"Libya",2013,39.84
+"Libya",2014,45.99
+"Libya",2015,57.89
+"Libya",2016,56.81
+"Liechtenstein",2012,7.35
+"Liechtenstein",2013,7.02
+"Liechtenstein",2014,17.67
+"Liechtenstein",2015,18.36
+"Liechtenstein",2016,20.31
+"Lithuania",2012,18.24
+"Lithuania",2013,19.2
+"Lithuania",2014,18.8
+"Lithuania",2015,19.95
+"Lithuania",2016,21.37
+"Luxembourg",2012,6.68
+"Luxembourg",2013,6.7
+"Luxembourg",2014,13.61
+"Luxembourg",2015,14.43
+"Luxembourg",2016,14.72
+"Macedonia",2013,36.43
+"Macedonia",2014,36.26
+"Macedonia",2015,36.09
+"Macedonia",2016,35.74
+"Madagascar",2012,28.62
+"Madagascar",2013,29.38
+"Madagascar",2014,27.43
+"Madagascar",2015,27.04
+"Madagascar",2016,26.71
+"Malawi",2012,28.18
+"Malawi",2013,28.29
+"Malawi",2014,26.41
+"Malawi",2015,28.12
+"Malawi",2016,28.97
+"Malaysia",2012,42.73
+"Malaysia",2013,42.73
+"Malaysia",2014,43.29
+"Malaysia",2015,46.57
+"Malaysia",2016,46.89
+"Maldives",2012,31.1
+"Maldives",2013,33.11
+"Maldives",2014,34.32
+"Maldives",2015,34.17
+"Maldives",2016,39.3
+"Mali",2012,30.03
+"Mali",2013,36.29
+"Mali",2014,36.33
+"Mali",2015,39.83
+"Mali",2016,38.27
+"Malta",2012,23.3
+"Malta",2013,23.84
+"Malta",2014,24.16
+"Malta",2015,23.84
+"Malta",2016,24.76
+"Mauritania",2012,26.76
+"Mauritania",2013,26.53
+"Mauritania",2014,25.27
+"Mauritania",2015,24.03
+"Mauritania",2016,26.49
+"Mauritius",2012,26.47
+"Mauritius",2013,27.69
+"Mauritius",2014,27.69
+"Mauritius",2015,27.69
+"Mauritius",2016,26.67
+"Mexico",2012,45.3
+"Mexico",2013,45.04
+"Mexico",2014,43.69
+"Mexico",2015,49.33
+"Mexico",2016,48.97
+"Moldova",2012,26.01
+"Moldova",2013,25.35
+"Moldova",2014,27.85
+"Moldova",2015,28.83
+"Moldova",2016,30.41
+"Mongolia",2012,29.93
+"Mongolia",2013,30.3
+"Mongolia",2014,25.25
+"Mongolia",2015,27.61
+"Mongolia",2016,28.95
+"Montenegro",2012,32.97
+"Montenegro",2013,34.78
+"Montenegro",2014,34.63
+"Montenegro",2015,32.79
+"Montenegro",2016,33.65
+"Morocco",2012,39.04
+"Morocco",2015,42.64
+"Morocco",2016,42.42
+"Mozambique",2012,28.01
+"Mozambique",2013,29.26
+"Mozambique",2014,29.98
+"Mozambique",2015,30.25
+"Mozambique",2016,31.05
+"Myanmar",2015,45.48
+"Myanmar",2016,41.82
+"Namibia",2012,12.5
+"Namibia",2013,12.5
+"Namibia",2014,12.5
+"Namibia",2015,15.15
+"Namibia",2016,17.08
+"Nepal",2012,34.61
+"Nepal",2013,36.16
+"Nepal",2014,32.71
+"Nepal",2015,32.62
+"Nepal",2016,33.02
+"Netherlands",2012,6.48
+"Netherlands",2013,6.46
+"Netherlands",2014,9.22
+"Netherlands",2015,8.76
+"Netherlands",2016,11.28
+"New Zealand",2012,8.38
+"New Zealand",2013,8.55
+"New Zealand",2014,10.06
+"New Zealand",2015,10.01
+"New Zealand",2016,13.98
+"Nicaragua",2012,28.31
+"Nicaragua",2013,27.7
+"Nicaragua",2014,27.94
+"Nicaragua",2015,28.82
+"Nicaragua",2016,31.01
+"Niger",2012,23.08
+"Niger",2013,23.59
+"Niger",2014,23.85
+"Niger",2015,24.62
+"Niger",2016,27.21
+"Nigeria",2012,34.11
+"Nigeria",2013,34.24
+"Nigeria",2014,34.09
+"Nigeria",2015,35.9
+"Nigeria",2016,39.69
+"North Korea",2012,83.9
+"North Korea",2013,81.96
+"North Korea",2014,83.25
+"Northern Cyprus",2012,29.34
+"Norway",2012,6.52
+"Norway",2013,6.52
+"Norway",2014,7.75
+"Norway",2015,8.79
+"Norway",2016,7.6
+"Oman",2012,41.51
+"Oman",2013,38.83
+"Oman",2014,38.83
+"Oman",2015,40.43
+"Oman",2016,40.46
+"Pakistan",2012,51.31
+"Pakistan",2013,51.46
+"Pakistan",2014,50.46
+"Pakistan",2015,48.52
+"Pakistan",2016,43.55
+"Palestine",2012,43.09
+"Palestine",2013,40.11
+"Palestine",2014,41.01
+"Palestine",2015,42.93
+"Palestine",2016,42.9
+"Panama",2012,32.95
+"Panama",2013,30.2
+"Panama",2014,28.98
+"Panama",2015,30.59
+"Panama",2016,32.12
+"Papua New Guinea",2012,22.97
+"Papua New Guinea",2013,23.46
+"Papua New Guinea",2014,25.87
+"Papua New Guinea",2015,25.81
+"Papua New Guinea",2016,25.07
+"Paraguay",2012,28.78
+"Paraguay",2013,31.81
+"Paraguay",2014,33.74
+"Paraguay",2015,33.63
+"Paraguay",2016,35.64
+"Peru",2012,31.87
+"Peru",2013,31.7
+"Peru",2014,31.21
+"Peru",2015,29.99
+"Peru",2016,30.98
+"Philippines",2012,43.11
+"Philippines",2013,43.69
+"Philippines",2014,41.19
+"Philippines",2015,44.66
+"Philippines",2016,41.08
+"Poland",2012,13.11
+"Poland",2013,11.03
+"Poland",2014,12.71
+"Poland",2015,23.89
+"Poland",2016,26.47
+"Portugal",2012,16.75
+"Portugal",2013,17.73
+"Portugal",2014,17.11
+"Portugal",2015,17.27
+"Portugal",2016,15.77
+"Qatar",2012,32.86
+"Qatar",2013,34.32
+"Qatar",2014,35.35
+"Qatar",2015,35.97
+"Qatar",2016,39.83
+"Macedonia",2012,34.27
+"Republic of the Congo",2012,28.2
+"Romania",2012,23.05
+"Romania",2013,23.48
+"Romania",2014,24.9
+"Romania",2015,24.29
+"Romania",2016,24.46
+"Russia",2012,43.42
+"Russia",2013,42.78
+"Russia",2014,44.97
+"Russia",2015,49.03
+"Russia",2016,49.45
+"Rwanda",2012,55.46
+"Rwanda",2013,56.57
+"Rwanda",2014,56.57
+"Rwanda",2015,54.61
+"Rwanda",2016,54.11
+"Samoa",2012,23.84
+"Samoa",2013,22.02
+"Samoa",2014,22.32
+"Samoa",2015,18.8
+"Samoa",2016,16.41
+"Saudi Arabia",2012,56.88
+"Saudi Arabia",2013,58.3
+"Saudi Arabia",2014,59.41
+"Saudi Arabia",2015,59.72
+"Saudi Arabia",2016,66.02
+"Senegal",2012,26.19
+"Senegal",2013,26.68
+"Senegal",2014,27.77
+"Senegal",2015,27.99
+"Senegal",2016,26.72
+"Serbia",2012,26.59
+"Serbia",2013,25.05
+"Serbia",2014,27.66
+"Serbia",2015,27.6
+"Serbia",2016,28.05
+"Seychelles",2012,29.19
+"Seychelles",2013,31.68
+"Seychelles",2014,31.55
+"Seychelles",2015,30.6
+"Seychelles",2016,30.86
+"Sierra Leone",2012,26.35
+"Sierra Leone",2013,28.23
+"Sierra Leone",2014,28.47
+"Sierra Leone",2015,29.94
+"Sierra Leone",2016,30.73
+"Singapore",2012,43.43
+"Singapore",2013,44.29
+"Singapore",2014,45.87
+"Singapore",2015,52.96
+"Singapore",2016,51.1
+"Slovakia",2012,13.25
+"Slovakia",2013,11.39
+"Slovakia",2014,11.66
+"Slovakia",2015,13.26
+"Slovakia",2016,15.51
+"Slovenia",2012,20.49
+"Slovenia",2013,20.38
+"Slovenia",2014,20.55
+"Slovenia",2015,22.26
+"Slovenia",2016,21.7
+"Somalia",2012,73.59
+"Somalia",2013,73.19
+"Somalia",2014,72.31
+"Somalia",2015,65.35
+"Somalia",2016,65.95
+"South Africa",2012,24.56
+"South Africa",2013,23.19
+"South Africa",2014,22.06
+"South Africa",2015,21.92
+"South Africa",2016,20.12
+"South Korea",2012,24.48
+"South Korea",2013,25.66
+"South Korea",2014,26.55
+"South Korea",2015,28.58
+"South Korea",2016,27.61
+"South Sudan",2012,36.2
+"South Sudan",2013,36.05
+"South Sudan",2014,38.04
+"South Sudan",2015,44.87
+"South Sudan",2016,48.16
+"Spain",2012,20.5
+"Spain",2013,20.63
+"Spain",2014,19.95
+"Spain",2015,19.92
+"Spain",2016,18.69
+"Sri Lanka",2012,56.59
+"Sri Lanka",2013,59.13
+"Sri Lanka",2014,60.28
+"Sri Lanka",2015,44.96
+"Sri Lanka",2016,44.34
+"Sudan",2012,70.06
+"Sudan",2013,71.88
+"Sudan",2014,72.34
+"Sudan",2015,72.53
+"Sudan",2016,73.56
+"Suriname",2013,18.2
+"Suriname",2014,18.2
+"Suriname",2012,18.19
+"Suriname",2015,16.7
+"Suriname",2016,16.07
+"Swaziland",2012,46.76
+"Swaziland",2013,46.76
+"Swaziland",2014,47.28
+"Swaziland",2015,52.37
+"Swaziland",2016,51.27
+"Sweden",2012,9.23
+"Sweden",2013,8.98
+"Sweden",2014,9.47
+"Sweden",2015,12.33
+"Sweden",2016,8.27
+"Switzerland",2012,9.94
+"Switzerland",2013,10.47
+"Switzerland",2014,13.85
+"Switzerland",2015,11.76
+"Switzerland",2016,12.13
+"Syria",2012,78.53
+"Syria",2013,77.04
+"Syria",2014,77.29
+"Syria",2015,81.35
+"Syria",2016,81.49
+"Taiwan",2012,23.82
+"Taiwan",2013,23.82
+"Taiwan",2014,24.83
+"Taiwan",2015,24.37
+"Taiwan",2016,24.37
+"Tajikistan",2012,35.71
+"Tajikistan",2013,34.86
+"Tajikistan",2014,36.19
+"Tajikistan",2015,50.34
+"Tajikistan",2016,50.27
+"Tanzania",2012,27.34
+"Tanzania",2013,27.3
+"Tanzania",2014,28.09
+"Tanzania",2015,28.65
+"Tanzania",2016,30.65
+"Thailand",2012,38.6
+"Thailand",2013,37.94
+"Thailand",2014,40.07
+"Thailand",2015,44.53
+"Thailand",2016,44.69
+"DR Congo",2015,50.97
+"DR Congo",2016,52.67
+"Togo",2012,28.45
+"Togo",2013,NA
+"Togo",2014,28.5
+"Togo",2015,30.31
+"Togo",2016,30.75
+"Tonga",2012,26.7
+"Tonga",2013,26.7
+"Tonga",2014,23.37
+"Tonga",2015,21.24
+"Tonga",2016,24.97
+"Trinidad and Tobago",2012,23.12
+"Trinidad and Tobago",2013,23.28
+"Trinidad and Tobago",2014,22.39
+"Trinidad and Tobago",2015,23.29
+"Trinidad and Tobago",2016,20.62
+"Tunisia",2012,39.93
+"Tunisia",2013,38.69
+"Tunisia",2014,38.68
+"Tunisia",2015,31.6
+"Tunisia",2016,32.22
+"Turkey",2012,46.56
+"Turkey",2013,45.87
+"Turkey",2014,44.16
+"Turkey",2015,50.76
+"Turkey",2016,52.98
+"Turkmenistan",2012,79.14
+"Turkmenistan",2013,80.81
+"Turkmenistan",2014,80.83
+"Turkmenistan",2015,83.44
+"Turkmenistan",2016,84.19
+"Uganda",2012,31.69
+"Uganda",2013,33.29
+"Uganda",2014,31.65
+"Uganda",2015,32.58
+"Uganda",2016,35.94
+"Ukraine",2012,36.79
+"Ukraine",2013,36.93
+"Ukraine",2014,39.1
+"Ukraine",2015,32.93
+"Ukraine",2016,33.19
+"United Arab Emirates",2012,33.49
+"United Arab Emirates",2013,36.03
+"United Arab Emirates",2014,36.73
+"United Arab Emirates",2015,36.73
+"United Arab Emirates",2016,39.39
+"United Kingdom",2012,16.89
+"United Kingdom",2013,19.93
+"United Kingdom",2014,NA
+"United Kingdom",2015,21.7
+"United Kingdom",2016,22.26
+"United States",2012,18.22
+"United States",2013,23.49
+"United States",2014,24.41
+"United States",2015,22.49
+"United States",2016,23.88
+"Uruguay",2012,15.92
+"Uruguay",2013,16.08
+"Uruguay",2014,15.94
+"Uruguay",2015,15.88
+"Uruguay",2016,17.43
+"Uzbekistan",2012,60.39
+"Uzbekistan",2013,61.01
+"Uzbekistan",2014,61.14
+"Uzbekistan",2015,61.15
+"Uzbekistan",2016,66.11
+"Venezuela",2012,34.44
+"Venezuela",2013,35.37
+"Venezuela",2014,40.61
+"Venezuela",2015,44.77
+"Venezuela",2016,42.94
+"Vietnam",2012,71.78
+"Vietnam",2013,72.36
+"Vietnam",2014,72.63
+"Vietnam",2015,74.27
+"Vietnam",2016,73.96
+"Yemen",2012,69.22
+"Yemen",2013,67.26
+"Yemen",2014,66.36
+"Yemen",2015,67.07
+"Yemen",2016,65.8
+"Zambia",2012,27.93
+"Zambia",2013,30.89
+"Zambia",2014,34.35
+"Zambia",2015,35.08
+"Zambia",2016,36.48
+"Zimbabwe",2012,38.12
+"Zimbabwe",2013,39.19
+"Zimbabwe",2014,39.19
+"Zimbabwe",2015,40.41
+"Zimbabwe",2016,41.44
