@@ -18,8 +18,6 @@ acledr.years <- function(start = 1997, end = as.numeric(substr(Sys.Date(), 1, 4)
   DF <- bind_rows(List) %>%
     arrange(as.Date(event_date), gwno, event_type, actor1, actor2)
 
-  return(DF)
-
 }
 
 # load all acled data for a single country; defaults to Nigeria
@@ -29,13 +27,9 @@ acledr.country <- function(country = "Nigeria") {
 
   url <- sprintf("http://acleddata.com/api/acled/read.csv?limit=0&gwno=%d", code)
 
-  DF <- read.csv(url, stringsAsFactors = FALSE)
-
-  DF <- DF %>%
+  DF <- read.csv(url, stringsAsFactors = FALSE) %>%
     mutate(event_date = as.Date(event_date)) %>%
     arrange(event_date, event_type, actor1, actor2)
-
-  return(DF)
 
 }
 
@@ -108,8 +102,6 @@ acledr.como <- function(acleddata) {
     merge(., ACLED.cm.deaths.civilian) %>%
     merge(., ACLED.cm.deaths.battle) %>%
     arrange(country, year, month)
-
-  return(DF)
 
 }
 
