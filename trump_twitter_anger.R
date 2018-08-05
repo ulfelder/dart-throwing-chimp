@@ -114,5 +114,42 @@ trump_anger_vocabulary <- X2 %>%
   tally() %>%
   arrange(desc(n))
 
-# inspect the top 15 anger words for curiousity's sake and to make sure nothing looks wacky
+# inspect the top 15 anger words
 trump_anger_vocabulary[1:15,]
+
+# huh, 'vote' is the most common anger word. most of us probably don't think of that as
+# an angry word. so let's do a sensitivity analysis: remove 'vote' from the set of words
+# counted in the tallies of angry word and see if the trends change (tl;dr they don't)
+
+trump_daily_word_count_anger_sans_vote <- X2 %>%
+  inner_join(., get_sentiments("nrc")) %>%
+  filter(sentiment == "anger") %>%
+  # here's where we drop vote from the set of words included in the anger tallies
+  filter(word != "vote") %>%
+  group_by(date) %>%
+  summarize(anger_words = n()) %>%
+  left_join(trump_daily_word_count, .) %>%
+  mutate(anger_words = ifelse(is.na(anger_words), 0, anger_words),
+         anger_share = ifelse(total_words == 0, 0, anger_words/total_words))
+
+png("~/documents/blog_posts/trump_tweets_anger_raw_sans_vote_20180804.png",
+    width = 7, height = 5, unit = "in", res = 300)
+ggplot(filter(trump_daily_word_count_anger_sans_vote, date >= "2012-01-01"), aes(date, anger_words)) +
+  geom_col() +
+  geom_smooth(method = "loess", size = 1, span = 1/4, colour = "red") +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank()) +
+  ggtitle("Daily count of anger words (minus 'vote') tweeted by @realDonaldTrump")
+dev.off()
+
+png("~/documents/blog_posts/trump_tweets_anger_share_sans_vote_20180804.png",
+    width = 7, height = 5, unit = "in", res = 300)
+ggplot(filter(trump_daily_word_count_anger_sans_vote, date >= "2012-01-01"), aes(date, anger_share)) +
+  geom_col() +
+  geom_smooth(method = "loess", size = 1, span = 1/3, colour = "red") +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank()) +
+  ggtitle("Anger words (minus 'vote') as a share of daily words tweeted by @realDonaldTrump")
+dev.off()
