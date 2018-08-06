@@ -153,3 +153,24 @@ ggplot(filter(trump_daily_word_count_anger_sans_vote, date >= "2012-01-01"), aes
         axis.title.y = element_blank()) +
   ggtitle("Anger words (minus 'vote') as a share of daily words tweeted by @realDonaldTrump")
 dev.off()
+
+# on Twitter, @jepusto suggested I try exponential smoothing to see if the apparent increase
+# in the recent past was an artifact of loess' propensity for misbehaving near the edges of
+# the series. Here is code to do that. TL;DR no, the finding holds.
+
+# reduce the data to the same 2012- period used above, and make a time series object with proper
+# indexing from the normalized series
+x <- filter(trump_daily_word_count_anger, date >= "2012-01-01")
+x <- zoo(x$anger_share, order.by = x$date)
+
+# use the es function from the smooth package to fit a model to that series, with the default
+# forecast period (which doesn't really interest us much anyway)
+library(smooth)
+esm <- es(x)
+
+# plot the results using smooth's built-in graphing function, which includes a nice legend
+png("~/documents/blog_posts/trump_tweets_anger_share_exponential_smoothing_20180804.png",
+    width = 7, height = 5, unit = "in", res = 300)
+graphmaker(x, esm$forecast, esm$fitted,
+	   main = "exponential smoothing estimates of daily anger word shares")
+dev.off()
